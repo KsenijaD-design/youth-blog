@@ -54,13 +54,16 @@ app.get('/', async (req, res) => {
 
   rows.forEach(post => {
     html += `
-      <div class="post">
-        <h2>${post.title}</h2>
-        <p>${post.content.replace(/\n/g, '<br>')}</p>
-        ${post.image ? `<img src="${post.image}">` : ''}
-        <small>${new Date(post.created_at).toLocaleString('ru')}</small>
-      </div>
-    `;
+  <div class="post">
+    <h2>${post.title}</h2>
+    <p>${post.content.replace(/\n/g, '<br>')}</p>
+    ${post.image ? `<img src="${post.image}">` : ''}
+    <small>${new Date(post.created_at).toLocaleString('ru')}</small>
+    <form action="/delete/${post.id}" method="POST" style="margin-top: 10px;">
+      <button type="submit" style="background:#e74c3c;color:white;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;">Удалить</button>
+    </form>
+  </div>
+`;
   });
 
   html += `</body></html>`;
@@ -69,6 +72,12 @@ app.get('/', async (req, res) => {
 
 app.get('/admin.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'admin.html'));
+});
+// Удаление поста
+app.post('/delete/:id', async (req, res) => {
+  const id = req.params.id;
+  await pool.query('DELETE FROM posts WHERE id = $1', [id]);
+  res.redirect('/');
 });
 
 // Добавление поста (фото сохраняется прямо в базу)
