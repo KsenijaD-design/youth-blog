@@ -280,7 +280,7 @@ app.get('/room', (req, res) => {
       <a href="/admin.html">+ Добавить пост</a>
     </nav>
     <audio id="bg-music" loop>
-  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+  <source src="https://files.catbox.moe/twr7d5.mp3" type="audio/mpeg">
 </audio>
 <button id="music-btn" style="position:absolute; top:70px; right:20px; z-index:100; background:#2c3e50; color:white; border:none; padding:8px 14px; border-radius:6px; cursor:pointer;">
   🎵 Музыка
