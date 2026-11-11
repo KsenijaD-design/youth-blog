@@ -216,21 +216,28 @@ app.get('/room', (req, res) => {
 
       #tree-img {
         position: absolute;
-        bottom: 20px;
-        right: 30px;
+        bottom: -40px;
+        right: 20px;
         width: 900px;
         height: auto;
-        pointer-events: none;
         z-index: 5;
+        cursor: pointer;
       }
 
       .ornament {
         position: absolute;
-        width: 70px;
+        width: 42px;
         height: auto;
         z-index: 10;
         pointer-events: none;
-        filter: drop-shadow(2px 3px 3px rgba(0,0,0,0.4));
+        filter: drop-shadow(1px 2px 2px rgba(0,0,0,0.4));
+        animation: appear 0.35s ease-out;
+      }
+
+      @keyframes appear {
+        0% { transform: scale(0); opacity: 0; }
+        70% { transform: scale(1.15); opacity: 1; }
+        100% { transform: scale(1); opacity: 1; }
       }
 
       #palette {
@@ -239,7 +246,7 @@ app.get('/room', (req, res) => {
         color: white; z-index: 50; max-width: 280px;
       }
       .toy-btn {
-        width: 50px; height: 50px; object-fit: contain;
+        width: 46px; height: 46px; object-fit: contain;
         margin: 4px; cursor: pointer; border: 2px solid transparent;
         border-radius: 8px; background: rgba(255,255,255,0.1);
       }
@@ -277,18 +284,19 @@ app.get('/room', (req, res) => {
       let selectedToy = 'https://i.ibb.co/9Hg5qPB1/1.png';
 
       document.querySelectorAll('.toy-btn').forEach(btn => {
-        btn.onclick = () => {
+        btn.onclick = (e) => {
+          e.stopPropagation();
           selectedToy = btn.dataset.src;
           document.querySelectorAll('.toy-btn').forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
         };
       });
 
-      document.getElementById('room').onclick = function(e) {
-        if (e.target.closest('nav') || e.target.closest('#palette')) return;
-
-        const x = e.clientX - 35;
-        const y = e.clientY - 35;
+      // Клик только по ёлке
+      document.getElementById('tree-img').onclick = function(e) {
+        const rect = this.getBoundingClientRect();
+        const x = e.clientX - 21;
+        const y = e.clientY - 21;
 
         const ornament = document.createElement('img');
         ornament.className = 'ornament';
