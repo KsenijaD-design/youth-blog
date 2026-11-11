@@ -279,6 +279,12 @@ app.get('/room', (req, res) => {
       <a href="/gallery">Галерея</a>
       <a href="/admin.html">+ Добавить пост</a>
     </nav>
+    <audio id="bg-music" loop>
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+</audio>
+<button id="music-btn" style="position:absolute; top:70px; right:20px; z-index:100; background:#2c3e50; color:white; border:none; padding:8px 14px; border-radius:6px; cursor:pointer;">
+  🎵 Музыка
+</button>
 
     <div id="palette">
       <div style="margin-bottom:8px; font-size:14px;">Выбери игрушку и кликни на ёлку</div>
@@ -312,6 +318,20 @@ app.get('/room', (req, res) => {
           btn.classList.add('active');
         };
       });
+      const music = document.getElementById('bg-music');
+const musicBtn = document.getElementById('music-btn');
+let isPlaying = false;
+
+musicBtn.onclick = () => {
+  if (isPlaying) {
+    music.pause();
+    musicBtn.textContent = '🎵 Музыка';
+  } else {
+    music.play();
+    musicBtn.textContent = '⏸ Пауза';
+  }
+  isPlaying = !isPlaying;
+};
 
       document.getElementById('tree-img').onclick = function(e) {
         const rect = this.getBoundingClientRect();
