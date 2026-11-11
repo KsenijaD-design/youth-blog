@@ -351,7 +351,7 @@ app.get('/room', (req, res) => {
     <div id="room">
       <div id="floor"></div>
       <img id="chair" src="https://i.ibb.co/RpV1XtXd/2.png" alt="Кресло">
-      <img id="fireplace-img" src="https://i.ibb.co/G40zN7Kh/11.png" alt="Камин">
+      <img id="fireplace-img" src="https://i.ibb.co/nMc11Frb/3.png" alt="Камин">
       <div id="fire"></div>
       <img id="tree-img" src="https://i.ibb.co/bp7cWnn/4692475-01.png" alt="Ёлка">
       <div id="tsparticles"></div>
@@ -360,16 +360,14 @@ app.get('/room', (req, res) => {
 
     <script>
       const gifts = [
-        "https://i.ibb.co/nMc11Frb/3.png",
         "https://i.ibb.co/XfGLxm22/4.png",
         "https://i.ibb.co/DfW5XB5N/6.png",
+        "https://i.ibb.co/WW6Gp37d/8.png",
         "https://i.ibb.co/cXDrdxT7/7.png"
       ];
       const stockings = [
-        "https://i.ibb.co/WW6Gp37d/8.png",
         "https://i.ibb.co/N6p7qR1z/9.png",
-        "https://i.ibb.co/JjvY6TH7/10.png",
-        "https://i.ibb.co/vCsrdxnJ/12.png"
+        "https://i.ibb.co/JjvY6TH7/10.png"
       ];
 
       let mode = "ornament";
