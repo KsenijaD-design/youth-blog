@@ -262,6 +262,7 @@ app.get('/room', (req, res) => {
         z-index: 15;
       }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script> 
   </head>
   <body>
     <nav>
@@ -349,42 +350,41 @@ function animateTrail() {
     return;
   }
 
-  // Основная белая лента
-  ctx.beginPath();
-  ctx.moveTo(points[0].x, points[0].y);
-  for (let i = 1; i < points.length - 1; i++) {
-    const xc = (points[i].x + points[i + 1].x) / 2;
-    const yc = (points[i].y + points[i + 1].y) / 2;
-    ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
-  }
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
-  ctx.lineWidth = 3;
-  ctx.lineCap = 'round';
-  ctx.lineJoin = 'round';
-  ctx.shadowBlur = 15;
-  ctx.shadowColor = 'rgba(180, 220, 255, 0.8)';
-  ctx.stroke();
-
-  // Синее свечение
-  ctx.beginPath();
-  ctx.moveTo(points[0].x, points[0].y);
-  for (let i = 1; i < points.length - 1; i++) {
-    const xc = (points[i].x + points[i + 1].x) / 2;
-    const yc = (points[i].y + points[i + 1].y) / 2;
-    ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
-  }
-  ctx.strokeStyle = 'rgba(100, 180, 255, 0.4)';
-  ctx.lineWidth = 8;
-  ctx.shadowBlur = 25;
-  ctx.shadowColor = 'rgba(80, 160, 255, 0.6)';
-  ctx.stroke();
-
-  // Постепенно убираем старые точки
-  if (points.length > 5) points.shift();
-
-  requestAnimationFrame(animateTrail);
-}
-animateTrail();
+  tsParticles.load("room", {
+  particles: {
+    number: { value: 0 },
+    color: { value: ["#ffffff", "#a0d8ff", "#e0f0ff"] },
+    shape: { type: "circle" },
+    opacity: {
+      value: 0.4,
+      random: true,
+      anim: { enable: true, speed: 1, opacity_min: 0.1, sync: false }
+    },
+    size: {
+      value: 8,
+      random: true,
+      anim: { enable: true, speed: 4, size_min: 2, sync: false }
+    },
+    move: {
+      enable: true,
+      speed: 1,
+      direction: "none",
+      random: true,
+      straight: false,
+      out_mode: "out"
+    }
+  },
+  interactivity: {
+    detectsOn: "canvas",
+    events: {
+      onHover: { enable: true, mode: "trail" }
+    },
+    modes: {
+      trail: { delay: 0.05, quantity: 5 }
+    }
+  },
+  retina_detect: true
+});
     </script>
   </body>
   </html>
