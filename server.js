@@ -200,68 +200,68 @@ app.get('/room', (req, res) => {
         z-index: 2;
       }
 
-      /* Кресло */
+      /* Кресло — чуть меньше */
       #chair {
         position: absolute;
-        bottom: 70px;
-        left: 20px;
-        width: 220px;
+        bottom: 75px;
+        left: 15px;
+        width: 170px;
         height: auto;
         z-index: 4;
         pointer-events: none;
       }
 
-      /* Камин */
+      /* Камин — большой, примерно половина ёлки */
       #fireplace-img {
         position: absolute;
-        bottom: 60px;
-        left: 230px;
-        width: 280px;
+        bottom: 50px;
+        left: 160px;
+        width: 420px;
         height: auto;
         z-index: 4;
         cursor: pointer;
       }
 
-      /* Огонь */
+      /* Огонь поверх камина */
       #fire {
         position: absolute;
-        bottom: 95px;
-        left: 310px;
-        width: 110px;
-        height: 70px;
-        background: radial-gradient(ellipse at center, #fff6 0%, #ff9a00 30%, #ff4500 60%, transparent 80%);
+        bottom: 110px;
+        left: 290px;
+        width: 140px;
+        height: 90px;
+        background: radial-gradient(ellipse at center, #fff8 0%, #ffaa00 25%, #ff5500 55%, transparent 75%);
         border-radius: 50%;
         z-index: 5;
-        animation: fireFlicker 0.15s infinite alternate;
+        animation: fireFlicker 0.12s infinite alternate;
         pointer-events: none;
         filter: blur(1px);
       }
       @keyframes fireFlicker {
-        0% { transform: scale(1) translateY(0); opacity: 0.85; }
-        100% { transform: scale(1.08) translateY(-4px); opacity: 1; }
+        0% { transform: scale(1) translateY(0); opacity: 0.8; }
+        100% { transform: scale(1.1) translateY(-6px); opacity: 1; }
       }
 
       .ember {
         position: absolute;
-        width: 4px;
-        height: 4px;
-        background: #ffaa44;
+        width: 3px;
+        height: 3px;
+        background: #ffbb66;
         border-radius: 50%;
         pointer-events: none;
         z-index: 6;
-        opacity: 0.6;
-        animation: emberFloat 2.5s infinite ease-out;
+        opacity: 0.5;
+        animation: emberFloat 2.8s infinite ease-out;
       }
       @keyframes emberFloat {
-        0% { transform: translate(0, 0) scale(1); opacity: 0.7; }
-        100% { transform: translate(var(--tx), var(--ty)) scale(0.3); opacity: 0; }
+        0% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+        100% { transform: translate(var(--tx), var(--ty)) scale(0.2); opacity: 0; }
       }
 
       #tree-img {
         position: absolute;
         bottom: -40px;
-        right: 20px;
-        width: 900px;
+        right: 10px;
+        width: 880px;
         height: auto;
         z-index: 5;
         cursor: pointer;
@@ -275,8 +275,8 @@ app.get('/room', (req, res) => {
         animation: appear 0.35s ease-out;
       }
       .ornament { width: 42px; }
-      .gift { width: 70px; }
-      .stocking { width: 55px; }
+      .gift { width: 75px; }
+      .stocking { width: 60px; }
 
       @keyframes appear {
         0% { transform: scale(0); opacity: 0; }
@@ -284,21 +284,24 @@ app.get('/room', (req, res) => {
         100% { transform: scale(1); opacity: 1; }
       }
       @keyframes disappear {
-        0% { transform: scale(1); opacity: 1; }
-        100% { transform: scale(0); opacity: 0; }
+        to { transform: scale(0); opacity: 0; }
       }
 
       #palette {
         position: absolute; top: 70px; left: 20px;
         background: rgba(0,0,0,0.85); padding: 12px; border-radius: 12px;
-        color: white; z-index: 50; max-width: 320px;
+        color: white; z-index: 50; max-width: 340px;
       }
-      .mode-btn, .toy-btn {
-        margin: 3px; cursor: pointer; border: 2px solid transparent; border-radius: 6px;
+      .mode-btn {
+        margin: 3px; padding: 6px 12px; cursor: pointer;
+        border: none; border-radius: 6px; background: #34495e; color: white;
       }
-      .mode-btn { padding: 6px 10px; background: #34495e; color: white; }
-      .mode-btn.active { background: #f1c40f; color: #000; }
-      .toy-btn { width: 42px; height: 42px; object-fit: contain; background: rgba(255,255,255,0.1); }
+      .mode-btn.active { background: #f1c40f; color: #111; }
+      .toy-btn {
+        width: 40px; height: 40px; object-fit: contain; margin: 3px;
+        cursor: pointer; border: 2px solid transparent; border-radius: 6px;
+        background: rgba(255,255,255,0.08);
+      }
       .toy-btn.active { border-color: #f1c40f; }
 
       #tsparticles, #snow {
@@ -348,7 +351,7 @@ app.get('/room', (req, res) => {
     <div id="room">
       <div id="floor"></div>
       <img id="chair" src="https://i.ibb.co/RpV1XtXd/2.png" alt="Кресло">
-      <img id="fireplace-img" src="https://i.ibb.co/DH0JmnDR/1.png" alt="Камин">
+      <img id="fireplace-img" src="https://i.ibb.co/G40zN7Kh/11.png" alt="Камин">
       <div id="fire"></div>
       <img id="tree-img" src="https://i.ibb.co/bp7cWnn/4692475-01.png" alt="Ёлка">
       <div id="tsparticles"></div>
@@ -365,19 +368,19 @@ app.get('/room', (req, res) => {
       const stockings = [
         "https://i.ibb.co/WW6Gp37d/8.png",
         "https://i.ibb.co/N6p7qR1z/9.png",
-        "https://i.ibb.co/JjvY6TH7/10.png"
+        "https://i.ibb.co/JjvY6TH7/10.png",
+        "https://i.ibb.co/vCsrdxnJ/12.png"
       ];
 
       let mode = "ornament";
       let selectedToy = "https://i.ibb.co/9Hg5qPB1/1.png";
 
-      // Переключение режимов
       document.querySelectorAll(".mode-btn").forEach(btn => {
         btn.onclick = () => {
           mode = btn.dataset.mode;
           document.querySelectorAll(".mode-btn").forEach(b => b.classList.remove("active"));
           btn.classList.add("active");
-          document.getElementById("toy-list").style.display = mode === "ornament" ? "block" : "none";
+          document.getElementById("toy-list").style.display = (mode === "ornament") ? "block" : "none";
         };
       });
 
@@ -390,85 +393,79 @@ app.get('/room', (req, res) => {
         };
       });
 
-      // Огоньки вокруг камина
+      // Огоньки
       function spawnEmber() {
         const ember = document.createElement("div");
         ember.className = "ember";
         const angle = Math.random() * Math.PI * 2;
-        const dist = 30 + Math.random() * 40;
-        ember.style.setProperty("--tx", Math.cos(angle) * dist + "px");
-        ember.style.setProperty("--ty", Math.sin(angle) * dist - 20 + "px");
-        ember.style.left = (310 + 55) + "px";
-        ember.style.top = (window.innerHeight - 130) + "px";
+        const dist = 40 + Math.random() * 50;
+        ember.style.setProperty("--tx", (Math.cos(angle) * dist) + "px");
+        ember.style.setProperty("--ty", (Math.sin(angle) * dist - 30) + "px");
+        ember.style.left = "360px";
+        ember.style.bottom = "140px";
         document.getElementById("room").appendChild(ember);
-        setTimeout(() => ember.remove(), 2500);
+        setTimeout(() => ember.remove(), 2800);
       }
-      setInterval(spawnEmber, 180);
+      setInterval(spawnEmber, 160);
 
-      // Клик по ёлке — игрушки
+      // Ёлка — игрушки
       document.getElementById("tree-img").onclick = function(e) {
         if (mode !== "ornament") return;
         const rect = this.getBoundingClientRect();
-        const clickX = e.clientX - rect.left;
-        const centerX = rect.width / 2;
-        const offset = (clickX - centerX) / centerX;
+        const offset = ((e.clientX - rect.left) - rect.width / 2) / (rect.width / 2);
         const rotation = offset * -18;
 
-        const ornament = document.createElement("img");
-        ornament.className = "ornament";
-        ornament.src = selectedToy;
-        ornament.style.left = (e.clientX - 21) + "px";
-        ornament.style.top = (e.clientY - 21) + "px";
-        ornament.style.transform = "rotate(" + rotation + "deg)";
-        document.getElementById("room").appendChild(ornament);
+        const el = document.createElement("img");
+        el.className = "ornament";
+        el.src = selectedToy;
+        el.style.left = (e.clientX - 21) + "px";
+        el.style.top = (e.clientY - 21) + "px";
+        el.style.transform = "rotate(" + rotation + "deg)";
+        document.getElementById("room").appendChild(el);
       };
 
-      // Клик по комнате — подарки
-      document.getElementById("room").onclick = function(e) {
+      // Подарки — клик по комнате
+      document.getElementById("room").addEventListener("click", function(e) {
         if (mode !== "gift") return;
-        if (e.target.closest("nav") || e.target.closest("#palette") || e.target.id === "tree-img") return;
+        if (e.target.closest("#palette") || e.target.closest("nav") || e.target.id === "tree-img" || e.target.id === "fireplace-img") return;
 
-        const gift = document.createElement("img");
-        gift.className = "gift";
-        gift.src = gifts[Math.floor(Math.random() * gifts.length)];
-        gift.style.left = (e.clientX - 35) + "px";
-        gift.style.top = (e.clientY - 35) + "px";
-        document.getElementById("room").appendChild(gift);
-      };
+        const el = document.createElement("img");
+        el.className = "gift";
+        el.src = gifts[Math.floor(Math.random() * gifts.length)];
+        el.style.left = (e.clientX - 37) + "px";
+        el.style.top = (e.clientY - 37) + "px";
+        document.getElementById("room").appendChild(el);
+      });
 
-      // Клик по камину — носки
+      // Носки — клик по камину
       document.getElementById("fireplace-img").onclick = function(e) {
         if (mode !== "stocking") return;
         e.stopPropagation();
-        const stocking = document.createElement("img");
-        stocking.className = "stocking";
-        stocking.src = stockings[Math.floor(Math.random() * stockings.length)];
-        stocking.style.left = (e.clientX - 27) + "px";
-        stocking.style.top = (e.clientY - 20) + "px";
-        document.getElementById("room").appendChild(stocking);
+        const el = document.createElement("img");
+        el.className = "stocking";
+        el.src = stockings[Math.floor(Math.random() * stockings.length)];
+        el.style.left = (e.clientX - 30) + "px";
+        el.style.top = (e.clientY - 25) + "px";
+        document.getElementById("room").appendChild(el);
       };
 
-      // Удаление по клику
+      // Удаление
       document.getElementById("room").addEventListener("click", function(e) {
         if (e.target.classList.contains("ornament") || e.target.classList.contains("gift") || e.target.classList.contains("stocking")) {
+          e.stopPropagation();
           e.target.style.animation = "disappear 0.3s ease-in forwards";
-          setTimeout(() => e.target.remove(), 300);
+          setTimeout(() => e.target.remove(), 280);
         }
       });
 
       // Музыка
       const music = document.getElementById("bg-music");
       const musicBtn = document.getElementById("music-btn");
-      let isPlaying = false;
+      let playing = false;
       musicBtn.onclick = () => {
-        if (isPlaying) {
-          music.pause();
-          musicBtn.textContent = "🎵 Музыка";
-        } else {
-          music.play();
-          musicBtn.textContent = "⏸ Пауза";
-        }
-        isPlaying = !isPlaying;
+        if (playing) { music.pause(); musicBtn.textContent = "🎵 Музыка"; }
+        else { music.play(); musicBtn.textContent = "⏸ Пауза"; }
+        playing = !playing;
       };
 
       // След
@@ -476,16 +473,16 @@ app.get('/room', (req, res) => {
         fullScreen: { enable: false },
         particles: {
           number: { value: 0 },
-          color: { value: ["#ffffff", "#d6ebff", "#f0f8ff"] },
-          opacity: { value: { min: 0.2, max: 0.5 }, animation: { enable: true, speed: 0.6, minimumValue: 0 } },
-          size: { value: { min: 7, max: 16 } },
-          move: { enable: true, speed: 0.5, direction: "none", random: true, outModes: "destroy" },
-          life: { duration: { value: 2.2 }, count: 1 }
+          color: { value: ["#ffffff", "#d6ebff"] },
+          opacity: { value: { min: 0.15, max: 0.45 }, animation: { enable: true, speed: 0.5, minimumValue: 0 } },
+          size: { value: { min: 6, max: 15 } },
+          move: { enable: true, speed: 0.4, random: true, outModes: "destroy" },
+          life: { duration: { value: 2.4 }, count: 1 }
         },
         interactivity: {
           detectsOn: "window",
           events: { onHover: { enable: true, mode: "trail" } },
-          modes: { trail: { delay: 0.05, quantity: 3, pauseOnStop: true } }
+          modes: { trail: { delay: 0.05, quantity: 3 } }
         }
       });
 
@@ -493,11 +490,11 @@ app.get('/room', (req, res) => {
       tsParticles.load("snow", {
         fullScreen: { enable: false },
         particles: {
-          number: { value: 50, density: { enable: true, area: 900 } },
-          color: { value: "#ffffff" },
-          opacity: { value: { min: 0.2, max: 0.55 } },
-          size: { value: { min: 1, max: 3 } },
-          move: { enable: true, speed: { min: 0.4, max: 1.2 }, direction: "bottom", outModes: "out" }
+          number: { value: 45 },
+          color: { value: "#fff" },
+          opacity: { value: { min: 0.15, max: 0.5 } },
+          size: { value: { min: 1, max: 2.8 } },
+          move: { enable: true, speed: { min: 0.3, max: 1 }, direction: "bottom", outModes: "out" }
         }
       });
     </script>
