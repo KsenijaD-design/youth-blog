@@ -60,7 +60,7 @@ function getHeader(active = '') {
   <body>
     <nav>
       <a href="/" class="${active === 'home' ? 'active' : ''}">Главная</a>
-      <a href="/blog" class="${active === 'blog' ? 'active' : ''}">Блог</a>
+      <a href="/room" class="${active === 'room' ? 'active' : ''}">Ёлка</a>
       <a href="/gallery" class="${active === 'gallery' ? 'active' : ''}">Галерея</a>
       <a href="/admin.html">+ Добавить пост</a>
     </nav>
@@ -177,7 +177,7 @@ app.get('/room', (req, res) => {
   <html lang="ru">
   <head>
     <meta charset="UTF-8">
-    <title>Новогодняя комната</title>
+    <title>Ёлка</title>
     <style>
       body { margin: 0; background: #1a1a2e; font-family: Arial; overflow: hidden; }
       #room {
@@ -191,52 +191,64 @@ app.get('/room', (req, res) => {
         bottom: 50px;
         left: 50%;
         transform: translateX(-50%);
-        width: 300px;
-        height: 450px;
+        width: 280px;
+        height: 420px;
         background: #0d5c0d;
-        clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        clip-path: polygon(50% 0%, 8% 100%, 92% 100%);
         cursor: pointer;
       }
       .ornament {
         position: absolute;
-        width: 30px;
-        height: 30px;
+        width: 28px;
+        height: 28px;
         border-radius: 50%;
-        cursor: move;
+        border: 2px solid rgba(255,255,255,0.6);
       }
       #palette {
         position: absolute;
-        top: 20px;
+        top: 80px;
         left: 20px;
-        background: rgba(0,0,0,0.6);
+        background: rgba(0,0,0,0.7);
         padding: 15px;
-        border-radius: 10px;
+        border-radius: 12px;
         color: white;
+        z-index: 10;
       }
       .color-btn {
-        width: 40px;
-        height: 40px;
+        width: 36px;
+        height: 36px;
         border-radius: 50%;
         display: inline-block;
-        margin: 5px;
+        margin: 4px;
         cursor: pointer;
         border: 2px solid white;
       }
-      nav { position: absolute; top: 10px; right: 20px; }
-      nav a { color: white; margin-left: 15px; text-decoration: none; }
+      nav {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: #2c3e50;
+        padding: 15px;
+        z-index: 20;
+      }
+      nav a { color: white; text-decoration: none; margin-right: 20px; font-weight: bold; }
     </style>
   </head>
   <body>
     <nav>
-      <a href="/">← На главную</a>
+      <a href="/">Главная</a>
+      <a href="/room">Ёлка</a>
+      <a href="/gallery">Галерея</a>
+      <a href="/admin.html">+ Добавить пост</a>
     </nav>
     <div id="palette">
-      <div>Выбери цвет и кликни на ёлку:</div>
+      <div style="margin-bottom:8px;">Выбери цвет и кликни на ёлку</div>
       <div class="color-btn" style="background:#e74c3c" data-color="#e74c3c"></div>
       <div class="color-btn" style="background:#f1c40f" data-color="#f1c40f"></div>
       <div class="color-btn" style="background:#3498db" data-color="#3498db"></div>
       <div class="color-btn" style="background:#9b59b6" data-color="#9b59b6"></div>
-      <div class="color-btn" style="background:#2ecc71" data-color="#2ecc71"></div>
+      <div class="color-btn" style="background:#ecf0f1" data-color="#ecf0f1"></div>
     </div>
     <div id="room">
       <div id="tree"></div>
@@ -246,13 +258,19 @@ app.get('/room', (req, res) => {
       let selectedColor = '#e74c3c';
 
       document.querySelectorAll('.color-btn').forEach(btn => {
-        btn.onclick = () => selectedColor = btn.dataset.color;
+        btn.onclick = () => {
+          selectedColor = btn.dataset.color;
+          document.querySelectorAll('.color-btn').forEach(b => b.style.outline = 'none');
+          btn.style.outline = '3px solid white';
+        };
       });
 
       document.getElementById('tree').onclick = function(e) {
         const rect = this.getBoundingClientRect();
-        const x = e.clientX - rect.left - 15;
-        const y = e.clientY - rect.top - 15;
+        const x = e.clientX - rect.left - 14;
+        const y = e.clientY - rect.top - 14;
+
+        if (x < 10 || x > 250 || y < 10 || y > 390) return;
 
         const ornament = document.createElement('div');
         ornament.className = 'ornament';
