@@ -179,60 +179,93 @@ app.get('/room', (req, res) => {
     <meta charset="UTF-8">
     <title>Ёлка</title>
     <style>
-      body { margin: 0; background: #1a1a2e; font-family: Arial; overflow: hidden; }
-      #room {
-        width: 100vw;
-        height: 100vh;
-        background: linear-gradient(#0f3460, #16213e);
-        position: relative;
+      * { box-sizing: border-box; }
+      body { margin: 0; background: #0a0a1a; font-family: Arial, sans-serif; overflow: hidden; }
+      nav {
+        position: absolute; top: 0; left: 0; right: 0;
+        background: rgba(20, 20, 40, 0.9); padding: 12px 20px; z-index: 100;
       }
-      #tree {
-        position: absolute;
-        bottom: 50px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 280px;
-        height: 420px;
-        background: #0d5c0d;
-        clip-path: polygon(50% 0%, 8% 100%, 92% 100%);
+      nav a { color: #eee; text-decoration: none; margin-right: 18px; font-weight: bold; }
+      nav a:hover { color: #f1c40f; }
+
+      #room {
+        width: 100vw; height: 100vh; position: relative;
+        background: linear-gradient(180deg, #1a1a3e 0%, #2d1b4e 40%, #3d2a1a 100%);
+      }
+
+      /* Пол */
+      #floor {
+        position: absolute; bottom: 0; left: 0; right: 0; height: 120px;
+        background: linear-gradient(#5d4037, #3e2723);
+      }
+
+      /* Окно */
+      #window {
+        position: absolute; top: 80px; right: 80px; width: 180px; height: 220px;
+        background: #87ceeb; border: 12px solid #5d4037; border-radius: 8px;
+        box-shadow: inset 0 0 30px rgba(255,255,255,0.3);
+      }
+      #window::before {
+        content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 8px;
+        background: #5d4037; transform: translateX(-50%);
+      }
+      #window::after {
+        content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 8px;
+        background: #5d4037;
+      }
+
+      /* Камин */
+      #fireplace {
+        position: absolute; bottom: 120px; left: 60px; width: 160px; height: 140px;
+        background: #4a3728; border-radius: 8px 8px 0 0;
+      }
+      #fire {
+        position: absolute; bottom: 10px; left: 30px; width: 100px; height: 60px;
+        background: radial-gradient(ellipse, #ff6b00, #ff3300 40%, transparent 70%);
+        border-radius: 50%; animation: flicker 0.3s infinite alternate;
+      }
+      @keyframes flicker {
+        from { opacity: 0.8; transform: scale(1); }
+        to { opacity: 1; transform: scale(1.05); }
+      }
+
+      /* Ёлка */
+      #tree-container {
+        position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%);
+        width: 320px; height: 480px;
+      }
+      .tree-layer {
+        position: absolute; left: 50%; transform: translateX(-50%);
+        background: #1a7a1a;
+        clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+      }
+      .layer1 { bottom: 0; width: 300px; height: 180px; background: #0d5c0d; }
+      .layer2 { bottom: 140px; width: 240px; height: 160px; background: #117a11; }
+      .layer3 { bottom: 260px; width: 180px; height: 140px; background: #159315; }
+      .layer4 { bottom: 360px; width: 100px; height: 100px; background: #1aad1a; }
+
+      #star {
+        position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+        font-size: 40px; color: #f1c40f; text-shadow: 0 0 10px #f1c40f;
+      }
+
+      .ornament {
+        position: absolute; width: 26px; height: 26px; border-radius: 50%;
+        border: 2px solid rgba(255,255,255,0.7);
+        box-shadow: inset -4px -4px 6px rgba(0,0,0,0.3), 2px 2px 4px rgba(255,255,255,0.4);
         cursor: pointer;
       }
-      .ornament {
-        position: absolute;
-        width: 28px;
-        height: 28px;
-        border-radius: 50%;
-        border: 2px solid rgba(255,255,255,0.6);
-      }
+
       #palette {
-        position: absolute;
-        top: 80px;
-        left: 20px;
-        background: rgba(0,0,0,0.7);
-        padding: 15px;
-        border-radius: 12px;
-        color: white;
-        z-index: 10;
+        position: absolute; top: 70px; left: 20px;
+        background: rgba(0,0,0,0.75); padding: 15px; border-radius: 12px;
+        color: white; z-index: 50;
       }
       .color-btn {
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        display: inline-block;
-        margin: 4px;
-        cursor: pointer;
-        border: 2px solid white;
+        width: 34px; height: 34px; border-radius: 50%; display: inline-block;
+        margin: 4px; cursor: pointer; border: 2px solid #fff;
       }
-      nav {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        background: #2c3e50;
-        padding: 15px;
-        z-index: 20;
-      }
-      nav a { color: white; text-decoration: none; margin-right: 20px; font-weight: bold; }
+      .color-btn.active { outline: 3px solid #f1c40f; }
     </style>
   </head>
   <body>
@@ -242,16 +275,31 @@ app.get('/room', (req, res) => {
       <a href="/gallery">Галерея</a>
       <a href="/admin.html">+ Добавить пост</a>
     </nav>
+
     <div id="palette">
-      <div style="margin-bottom:8px;">Выбери цвет и кликни на ёлку</div>
-      <div class="color-btn" style="background:#e74c3c" data-color="#e74c3c"></div>
+      <div style="margin-bottom:8px; font-size:14px;">Кликни цвет, потом на ёлку</div>
+      <div class="color-btn active" style="background:#e74c3c" data-color="#e74c3c"></div>
       <div class="color-btn" style="background:#f1c40f" data-color="#f1c40f"></div>
       <div class="color-btn" style="background:#3498db" data-color="#3498db"></div>
       <div class="color-btn" style="background:#9b59b6" data-color="#9b59b6"></div>
       <div class="color-btn" style="background:#ecf0f1" data-color="#ecf0f1"></div>
+      <div class="color-btn" style="background:#e91e63" data-color="#e91e63"></div>
     </div>
+
     <div id="room">
-      <div id="tree"></div>
+      <div id="window"></div>
+      <div id="fireplace">
+        <div id="fire"></div>
+      </div>
+      <div id="floor"></div>
+
+      <div id="tree-container">
+        <div class="tree-layer layer1"></div>
+        <div class="tree-layer layer2"></div>
+        <div class="tree-layer layer3"></div>
+        <div class="tree-layer layer4"></div>
+        <div id="star">★</div>
+      </div>
     </div>
 
     <script>
@@ -260,17 +308,20 @@ app.get('/room', (req, res) => {
       document.querySelectorAll('.color-btn').forEach(btn => {
         btn.onclick = () => {
           selectedColor = btn.dataset.color;
-          document.querySelectorAll('.color-btn').forEach(b => b.style.outline = 'none');
-          btn.style.outline = '3px solid white';
+          document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
         };
       });
 
-      document.getElementById('tree').onclick = function(e) {
-        const rect = this.getBoundingClientRect();
-        const x = e.clientX - rect.left - 14;
-        const y = e.clientY - rect.top - 14;
+      document.getElementById('tree-container').onclick = function(e) {
+        if (e.target.classList.contains('ornament')) return;
 
-        if (x < 10 || x > 250 || y < 10 || y > 390) return;
+        const rect = this.getBoundingClientRect();
+        const x = e.clientX - rect.left - 13;
+        const y = e.clientY - rect.top - 13;
+
+        // Не ставим слишком высоко или по краям
+        if (y < 30 || y > 450 || x < 20 || x > 280) return;
 
         const ornament = document.createElement('div');
         ornament.className = 'ornament';
