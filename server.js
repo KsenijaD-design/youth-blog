@@ -322,52 +322,65 @@ app.get('/room', (req, res) => {
         document.getElementById('room').appendChild(ornament);
       };
 
-      // Световой след
-      const canvas = document.getElementById('trail-canvas');
-      const ctx = canvas.getContext('2d');
+      // Тонкий дымчатый след
+const canvas = document.getElementById('trail-canvas');
+const ctx = canvas.getContext('2d');
 
-      function resizeCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-      }
-      resizeCanvas();
-      window.addEventListener('resize', resizeCanvas);
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
 
-      let particles = [];
+let particles = [];
+let mouse = { x: 0, y: 0 };
 
-      document.addEventListener('mousemove', (e) => {
-        for (let i = 0; i < 3; i++) {
-          particles.push({
-            x: e.clientX,
-            y: e.clientY,
-            size: Math.random() * 8 + 4,
-            life: 1,
-            vx: (Math.random() - 0.5) * 1.5,
-            vy: (Math.random() - 0.5) * 1.5
-          });
-        }
-      });
+document.addEventListener('mousemove', (e) => {
+  mouse.x = e.clientX;
+  mouse.y = e.clientY;
 
-      function animateTrail() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        for (let i = particles.length - 1; i >= 0; i--) {
-          const p = particles[i];
-          p.x += p.vx;
-          p.y += p.vy;
-          p.life -= 0.02;
-          p.size *= 0.98;
-          if (p.life <= 0) {
-            particles.splice(i, 1);
-            continue;
-          }
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-          ctx.fillStyle = 'rgba(255, 220, 150, ' + (p.life * 0.6) + ')';
-          ctx.fill();
-        }
-        requestAnimationFrame(animateTrail);
-      }
-      animateTrail();
+  for (let i = 0; i < 2; i++) {
+    particles.push({
+      x: mouse.x + (Math.random() - 0.5) * 10,
+      y: mouse.y + (Math.random() - 0.5) * 10,
+      size: Math.random() * 12 + 6,
+      life: 1,
+      vx: (Math.random() - 0.5) * 0.8,
+      vy: (Math.random() - 0.5) * 0.8 - 0.3
+    });
+  }
+});
+
+function animateTrail() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const p = particles[i];
+    p.x += p.vx;
+    p.y += p.vy;
+    p.life -= 0.015;
+    p.size *= 0.985;
+
+    if (p.life <= 0) {
+      particles.splice(i, 1);
+      continue;
+    }
+
+    const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size);
+    gradient.addColorStop(0, 'rgba(255, 230, 180, ' + (p.life * 0.25) + ')');
+    gradient.addColorStop(0.4, 'rgba(255, 200, 120, ' + (p.life * 0.12) + ')');
+    gradient.addColorStop(1, 'rgba(255, 180, 80, 0)');
+
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    ctx.fillStyle = gradient;
+    ctx.fill();
+  }
+
+  requestAnimationFrame(animateTrail);
+}
+animateTrail();
     </script>
   </body>
   </html>
