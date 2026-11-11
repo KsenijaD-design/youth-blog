@@ -178,6 +178,7 @@ app.get('/room', (req, res) => {
   <head>
     <meta charset="UTF-8">
     <title>Ёлка</title>
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
     <style>
       * { box-sizing: border-box; }
       body { margin: 0; background: #0a0a1a; font-family: Arial, sans-serif; overflow: hidden; }
@@ -196,16 +197,19 @@ app.get('/room', (req, res) => {
       #floor {
         position: absolute; bottom: 0; left: 0; right: 0; height: 80px;
         background: linear-gradient(#5d4037, #3e2723);
+        z-index: 2;
       }
 
       #window {
         position: absolute; top: 60px; left: 40px; width: 140px; height: 180px;
         background: #87ceeb; border: 8px solid #5d4037; border-radius: 6px;
+        z-index: 2;
       }
 
       #fireplace {
         position: absolute; bottom: 80px; left: 30px; width: 120px; height: 100px;
         background: #4a3728; border-radius: 6px 6px 0 0;
+        z-index: 2;
       }
       #fire {
         position: absolute; bottom: 6px; left: 20px; width: 80px; height: 40px;
@@ -252,17 +256,16 @@ app.get('/room', (req, res) => {
       }
       .toy-btn.active { border-color: #f1c40f; }
 
-      #trail-canvas {
+      #tsparticles {
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
+        z-index: 8;
         pointer-events: none;
-        z-index: 15;
       }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script> 
   </head>
   <body>
     <nav>
@@ -289,7 +292,7 @@ app.get('/room', (req, res) => {
       <div id="fireplace"><div id="fire"></div></div>
       <div id="floor"></div>
       <img id="tree-img" src="https://i.ibb.co/bp7cWnn/4692475-01.png" alt="Ёлка">
-      <canvas id="trail-canvas"></canvas>
+      <div id="tsparticles"></div>
     </div>
 
     <script>
@@ -323,68 +326,38 @@ app.get('/room', (req, res) => {
         document.getElementById('room').appendChild(ornament);
       };
 
-      // Неоновая лента за курсором
-const canvas = document.getElementById('trail-canvas');
-const ctx = canvas.getContext('2d');
-
-function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-resizeCanvas();
-window.addEventListener('resize', resizeCanvas);
-
-let points = [];
-const maxPoints = 40;
-
-document.addEventListener('mousemove', (e) => {
-  points.push({ x: e.clientX, y: e.clientY });
-  if (points.length > maxPoints) points.shift();
-});
-
-function animateTrail() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  if (points.length < 2) {
-    requestAnimationFrame(animateTrail);
-    return;
-  }
-
-  tsParticles.load("room", {
-  particles: {
-    number: { value: 0 },
-    color: { value: ["#ffffff", "#a0d8ff", "#e0f0ff"] },
-    shape: { type: "circle" },
-    opacity: {
-      value: 0.4,
-      random: true,
-      anim: { enable: true, speed: 1, opacity_min: 0.1, sync: false }
-    },
-    size: {
-      value: 8,
-      random: true,
-      anim: { enable: true, speed: 4, size_min: 2, sync: false }
-    },
-    move: {
-      enable: true,
-      speed: 1,
-      direction: "none",
-      random: true,
-      straight: false,
-      out_mode: "out"
-    }
-  },
-  interactivity: {
-    detectsOn: "canvas",
-    events: {
-      onHover: { enable: true, mode: "trail" }
-    },
-    modes: {
-      trail: { delay: 0.05, quantity: 5 }
-    }
-  },
-  retina_detect: true
-});
+      // Дымчатый след
+      tsParticles.load("tsparticles", {
+        fullScreen: { enable: false },
+        particles: {
+          number: { value: 0 },
+          color: { value: ["#ffffff", "#cce6ff", "#e6f2ff"] },
+          opacity: {
+            value: { min: 0.1, max: 0.35 },
+            animation: { enable: true, speed: 1, minimumValue: 0 }
+          },
+          size: {
+            value: { min: 4, max: 12 },
+            animation: { enable: true, speed: 3, minimumValue: 1 }
+          },
+          move: {
+            enable: true,
+            speed: 0.8,
+            direction: "none",
+            random: true,
+            outModes: "destroy"
+          }
+        },
+        interactivity: {
+          detectsOn: "window",
+          events: {
+            onHover: { enable: true, mode: "trail" }
+          },
+          modes: {
+            trail: { delay: 0.1, quantity: 4, pauseOnStop: true }
+          }
+        }
+      });
     </script>
   </body>
   </html>
