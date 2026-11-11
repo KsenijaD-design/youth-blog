@@ -195,28 +195,67 @@ app.get('/room', (req, res) => {
       }
 
       #floor {
-        position: absolute; bottom: 0; left: 0; right: 0; height: 80px;
+        position: absolute; bottom: 0; left: 0; right: 0; height: 90px;
         background: linear-gradient(#5d4037, #3e2723);
         z-index: 2;
       }
 
-      #window {
-        position: absolute; top: 60px; left: 40px; width: 140px; height: 180px;
-        background: #87ceeb; border: 8px solid #5d4037; border-radius: 6px;
-        z-index: 2;
+      /* Кресло */
+      #chair {
+        position: absolute;
+        bottom: 70px;
+        left: 20px;
+        width: 220px;
+        height: auto;
+        z-index: 4;
+        pointer-events: none;
       }
 
-      #fireplace {
-        position: absolute; bottom: 80px; left: 30px; width: 120px; height: 100px;
-        background: #4a3728; border-radius: 6px 6px 0 0;
-        z-index: 2;
+      /* Камин */
+      #fireplace-img {
+        position: absolute;
+        bottom: 60px;
+        left: 230px;
+        width: 280px;
+        height: auto;
+        z-index: 4;
+        cursor: pointer;
       }
+
+      /* Огонь */
       #fire {
-        position: absolute; bottom: 6px; left: 20px; width: 80px; height: 40px;
-        background: radial-gradient(ellipse, #ff6b00, #ff3300 40%, transparent 70%);
-        border-radius: 50%; animation: flicker 0.4s infinite alternate;
+        position: absolute;
+        bottom: 95px;
+        left: 310px;
+        width: 110px;
+        height: 70px;
+        background: radial-gradient(ellipse at center, #fff6 0%, #ff9a00 30%, #ff4500 60%, transparent 80%);
+        border-radius: 50%;
+        z-index: 5;
+        animation: fireFlicker 0.15s infinite alternate;
+        pointer-events: none;
+        filter: blur(1px);
       }
-      @keyframes flicker { from { opacity: 0.8; } to { opacity: 1; } }
+      @keyframes fireFlicker {
+        0% { transform: scale(1) translateY(0); opacity: 0.85; }
+        100% { transform: scale(1.08) translateY(-4px); opacity: 1; }
+      }
+
+      .ember {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: #ffaa44;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 6;
+        opacity: 0.6;
+        animation: emberFloat 2.5s infinite ease-out;
+      }
+      @keyframes emberFloat {
+        0% { transform: translate(0, 0) scale(1); opacity: 0.7; }
+        100% { transform: translate(var(--tx), var(--ty)) scale(0.3); opacity: 0; }
+      }
 
       #tree-img {
         position: absolute;
@@ -228,48 +267,52 @@ app.get('/room', (req, res) => {
         cursor: pointer;
       }
 
-      .ornament {
+      .ornament, .gift, .stocking {
         position: absolute;
-  width: 42px;
-  height: auto;
-  z-index: 10;
-  filter: drop-shadow(1px 2px 2px rgba(0,0,0,0.4));
-  animation: appear 0.35s ease-out;
-  cursor: pointer;
+        z-index: 10;
+        cursor: pointer;
+        filter: drop-shadow(1px 2px 2px rgba(0,0,0,0.4));
+        animation: appear 0.35s ease-out;
       }
+      .ornament { width: 42px; }
+      .gift { width: 70px; }
+      .stocking { width: 55px; }
 
       @keyframes appear {
         0% { transform: scale(0); opacity: 0; }
         70% { transform: scale(1.15); opacity: 1; }
         100% { transform: scale(1); opacity: 1; }
       }
-        @keyframes disappear {
-  0% { transform: scale(1); opacity: 1; }
-  100% { transform: scale(0); opacity: 0; }
-}
+      @keyframes disappear {
+        0% { transform: scale(1); opacity: 1; }
+        100% { transform: scale(0); opacity: 0; }
+      }
 
       #palette {
         position: absolute; top: 70px; left: 20px;
         background: rgba(0,0,0,0.85); padding: 12px; border-radius: 12px;
-        color: white; z-index: 50; max-width: 280px;
+        color: white; z-index: 50; max-width: 320px;
       }
-      .toy-btn {
-        width: 46px; height: 46px; object-fit: contain;
-        margin: 4px; cursor: pointer; border: 2px solid transparent;
-        border-radius: 8px; background: rgba(255,255,255,0.1);
+      .mode-btn, .toy-btn {
+        margin: 3px; cursor: pointer; border: 2px solid transparent; border-radius: 6px;
       }
+      .mode-btn { padding: 6px 10px; background: #34495e; color: white; }
+      .mode-btn.active { background: #f1c40f; color: #000; }
+      .toy-btn { width: 42px; height: 42px; object-fit: contain; background: rgba(255,255,255,0.1); }
       .toy-btn.active { border-color: #f1c40f; }
 
       #tsparticles, #snow {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
         pointer-events: none;
       }
       #tsparticles { z-index: 8; }
       #snow { z-index: 12; }
+
+      #music-btn {
+        position: absolute; top: 70px; right: 20px; z-index: 100;
+        background: #2c3e50; color: white; border: none;
+        padding: 8px 14px; border-radius: 6px; cursor: pointer;
+      }
     </style>
   </head>
   <body>
@@ -279,101 +322,182 @@ app.get('/room', (req, res) => {
       <a href="/gallery">Галерея</a>
       <a href="/admin.html">+ Добавить пост</a>
     </nav>
+
     <audio id="bg-music" loop>
-  <source src="https://files.catbox.moe/twr7d5.mp3" type="audio/mpeg">
-</audio>
-<button id="music-btn" style="position:absolute; top:70px; right:20px; z-index:100; background:#2c3e50; color:white; border:none; padding:8px 14px; border-radius:6px; cursor:pointer;">
-  🎵 Музыка
-</button>
+      <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+    <button id="music-btn">🎵 Музыка</button>
 
     <div id="palette">
-      <div style="margin-bottom:8px; font-size:14px;">Выбери игрушку и кликни на ёлку</div>
-      <img class="toy-btn active" src="https://i.ibb.co/9Hg5qPB1/1.png" data-src="https://i.ibb.co/9Hg5qPB1/1.png">
-      <img class="toy-btn" src="https://i.ibb.co/JjMjR71z/2.png" data-src="https://i.ibb.co/JjMjR71z/2.png">
-      <img class="toy-btn" src="https://i.ibb.co/ymgHjT2R/3.png" data-src="https://i.ibb.co/ymgHjT2R/3.png">
-      <img class="toy-btn" src="https://i.ibb.co/wZ69Vjpg/4.png" data-src="https://i.ibb.co/wZ69Vjpg/4.png">
-      <img class="toy-btn" src="https://i.ibb.co/GfcV8pSk/5.png" data-src="https://i.ibb.co/GfcV8pSk/5.png">
-      <img class="toy-btn" src="https://i.ibb.co/NgTKcnjD/6.png" data-src="https://i.ibb.co/NgTKcnjD/6.png">
-      <img class="toy-btn" src="https://i.ibb.co/G3Wxhr5n/7.png" data-src="https://i.ibb.co/G3Wxhr5n/7.png">
-      <img class="toy-btn" src="https://i.ibb.co/mCgNSQHR/8.png" data-src="https://i.ibb.co/mCgNSQHR/8.png">
+      <div style="margin-bottom:6px;">Режим:</div>
+      <button class="mode-btn active" data-mode="ornament">Игрушки</button>
+      <button class="mode-btn" data-mode="gift">Подарки</button>
+      <button class="mode-btn" data-mode="stocking">Носки</button>
+      <div id="toy-list" style="margin-top:10px;">
+        <img class="toy-btn active" src="https://i.ibb.co/9Hg5qPB1/1.png" data-src="https://i.ibb.co/9Hg5qPB1/1.png">
+        <img class="toy-btn" src="https://i.ibb.co/JjMjR71z/2.png" data-src="https://i.ibb.co/JjMjR71z/2.png">
+        <img class="toy-btn" src="https://i.ibb.co/ymgHjT2R/3.png" data-src="https://i.ibb.co/ymgHjT2R/3.png">
+        <img class="toy-btn" src="https://i.ibb.co/wZ69Vjpg/4.png" data-src="https://i.ibb.co/wZ69Vjpg/4.png">
+        <img class="toy-btn" src="https://i.ibb.co/GfcV8pSk/5.png" data-src="https://i.ibb.co/GfcV8pSk/5.png">
+        <img class="toy-btn" src="https://i.ibb.co/NgTKcnjD/6.png" data-src="https://i.ibb.co/NgTKcnjD/6.png">
+        <img class="toy-btn" src="https://i.ibb.co/G3Wxhr5n/7.png" data-src="https://i.ibb.co/G3Wxhr5n/7.png">
+        <img class="toy-btn" src="https://i.ibb.co/mCgNSQHR/8.png" data-src="https://i.ibb.co/mCgNSQHR/8.png">
+      </div>
     </div>
 
     <div id="room">
-      <div id="window"></div>
-      <div id="fireplace"><div id="fire"></div></div>
       <div id="floor"></div>
+      <img id="chair" src="https://i.ibb.co/RpV1XtXd/2.png" alt="Кресло">
+      <img id="fireplace-img" src="https://i.ibb.co/DH0JmnDR/1.png" alt="Камин">
+      <div id="fire"></div>
       <img id="tree-img" src="https://i.ibb.co/bp7cWnn/4692475-01.png" alt="Ёлка">
       <div id="tsparticles"></div>
       <div id="snow"></div>
     </div>
 
     <script>
-      let selectedToy = 'https://i.ibb.co/9Hg5qPB1/1.png';
+      const gifts = [
+        "https://i.ibb.co/nMc11Frb/3.png",
+        "https://i.ibb.co/XfGLxm22/4.png",
+        "https://i.ibb.co/DfW5XB5N/6.png",
+        "https://i.ibb.co/cXDrdxT7/7.png"
+      ];
+      const stockings = [
+        "https://i.ibb.co/WW6Gp37d/8.png",
+        "https://i.ibb.co/N6p7qR1z/9.png",
+        "https://i.ibb.co/JjvY6TH7/10.png"
+      ];
 
-      document.querySelectorAll('.toy-btn').forEach(btn => {
+      let mode = "ornament";
+      let selectedToy = "https://i.ibb.co/9Hg5qPB1/1.png";
+
+      // Переключение режимов
+      document.querySelectorAll(".mode-btn").forEach(btn => {
+        btn.onclick = () => {
+          mode = btn.dataset.mode;
+          document.querySelectorAll(".mode-btn").forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          document.getElementById("toy-list").style.display = mode === "ornament" ? "block" : "none";
+        };
+      });
+
+      document.querySelectorAll(".toy-btn").forEach(btn => {
         btn.onclick = (e) => {
           e.stopPropagation();
           selectedToy = btn.dataset.src;
-          document.querySelectorAll('.toy-btn').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
+          document.querySelectorAll(".toy-btn").forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
         };
       });
-      const music = document.getElementById('bg-music');
-const musicBtn = document.getElementById('music-btn');
-let isPlaying = false;
 
-musicBtn.onclick = () => {
-  if (isPlaying) {
-    music.pause();
-    musicBtn.textContent = '🎵 Музыка';
-  } else {
-    music.play();
-    musicBtn.textContent = '⏸ Пауза';
-  }
-  isPlaying = !isPlaying;
-};
+      // Огоньки вокруг камина
+      function spawnEmber() {
+        const ember = document.createElement("div");
+        ember.className = "ember";
+        const angle = Math.random() * Math.PI * 2;
+        const dist = 30 + Math.random() * 40;
+        ember.style.setProperty("--tx", Math.cos(angle) * dist + "px");
+        ember.style.setProperty("--ty", Math.sin(angle) * dist - 20 + "px");
+        ember.style.left = (310 + 55) + "px";
+        ember.style.top = (window.innerHeight - 130) + "px";
+        document.getElementById("room").appendChild(ember);
+        setTimeout(() => ember.remove(), 2500);
+      }
+      setInterval(spawnEmber, 180);
 
-      document.getElementById('tree-img').onclick = function(e) {
+      // Клик по ёлке — игрушки
+      document.getElementById("tree-img").onclick = function(e) {
+        if (mode !== "ornament") return;
         const rect = this.getBoundingClientRect();
         const clickX = e.clientX - rect.left;
         const centerX = rect.width / 2;
         const offset = (clickX - centerX) / centerX;
         const rotation = offset * -18;
 
-        const x = e.clientX - 21;
-        const y = e.clientY - 21;
-
-        const ornament = document.createElement('img');
-        ornament.className = 'ornament';
+        const ornament = document.createElement("img");
+        ornament.className = "ornament";
         ornament.src = selectedToy;
-        ornament.style.left = x + 'px';
-        ornament.style.top = y + 'px';
-        ornament.style.transform = 'rotate(' + rotation + 'deg)';
-        document.getElementById('room').appendChild(ornament);
+        ornament.style.left = (e.clientX - 21) + "px";
+        ornament.style.top = (e.clientY - 21) + "px";
+        ornament.style.transform = "rotate(" + rotation + "deg)";
+        document.getElementById("room").appendChild(ornament);
       };
-      // Удаление игрушки по клику
-document.getElementById('room').addEventListener('click', function(e) {
-  if (e.target.classList.contains('ornament')) {
-    const ornament = e.target;
-    ornament.style.animation = 'disappear 0.3s ease-in forwards';
-    setTimeout(() => ornament.remove(), 300);
-  }
-});
+
+      // Клик по комнате — подарки
+      document.getElementById("room").onclick = function(e) {
+        if (mode !== "gift") return;
+        if (e.target.closest("nav") || e.target.closest("#palette") || e.target.id === "tree-img") return;
+
+        const gift = document.createElement("img");
+        gift.className = "gift";
+        gift.src = gifts[Math.floor(Math.random() * gifts.length)];
+        gift.style.left = (e.clientX - 35) + "px";
+        gift.style.top = (e.clientY - 35) + "px";
+        document.getElementById("room").appendChild(gift);
+      };
+
+      // Клик по камину — носки
+      document.getElementById("fireplace-img").onclick = function(e) {
+        if (mode !== "stocking") return;
+        e.stopPropagation();
+        const stocking = document.createElement("img");
+        stocking.className = "stocking";
+        stocking.src = stockings[Math.floor(Math.random() * stockings.length)];
+        stocking.style.left = (e.clientX - 27) + "px";
+        stocking.style.top = (e.clientY - 20) + "px";
+        document.getElementById("room").appendChild(stocking);
+      };
+
+      // Удаление по клику
+      document.getElementById("room").addEventListener("click", function(e) {
+        if (e.target.classList.contains("ornament") || e.target.classList.contains("gift") || e.target.classList.contains("stocking")) {
+          e.target.style.animation = "disappear 0.3s ease-in forwards";
+          setTimeout(() => e.target.remove(), 300);
+        }
+      });
+
+      // Музыка
+      const music = document.getElementById("bg-music");
+      const musicBtn = document.getElementById("music-btn");
+      let isPlaying = false;
+      musicBtn.onclick = () => {
+        if (isPlaying) {
+          music.pause();
+          musicBtn.textContent = "🎵 Музыка";
+        } else {
+          music.play();
+          musicBtn.textContent = "⏸ Пауза";
+        }
+        isPlaying = !isPlaying;
+      };
+
+      // След
+      tsParticles.load("tsparticles", {
+        fullScreen: { enable: false },
+        particles: {
+          number: { value: 0 },
+          color: { value: ["#ffffff", "#d6ebff", "#f0f8ff"] },
+          opacity: { value: { min: 0.2, max: 0.5 }, animation: { enable: true, speed: 0.6, minimumValue: 0 } },
+          size: { value: { min: 7, max: 16 } },
+          move: { enable: true, speed: 0.5, direction: "none", random: true, outModes: "destroy" },
+          life: { duration: { value: 2.2 }, count: 1 }
+        },
+        interactivity: {
+          detectsOn: "window",
+          events: { onHover: { enable: true, mode: "trail" } },
+          modes: { trail: { delay: 0.05, quantity: 3, pauseOnStop: true } }
+        }
+      });
+
       // Снег
       tsParticles.load("snow", {
         fullScreen: { enable: false },
         particles: {
-          number: { value: 60, density: { enable: true, area: 900 } },
+          number: { value: 50, density: { enable: true, area: 900 } },
           color: { value: "#ffffff" },
-          opacity: { value: { min: 0.2, max: 0.6 } },
+          opacity: { value: { min: 0.2, max: 0.55 } },
           size: { value: { min: 1, max: 3 } },
-          move: {
-            enable: true,
-            speed: { min: 0.4, max: 1.2 },
-            direction: "bottom",
-            straight: false,
-            outModes: "out"
-          }
+          move: { enable: true, speed: { min: 0.4, max: 1.2 }, direction: "bottom", outModes: "out" }
         }
       });
     </script>
