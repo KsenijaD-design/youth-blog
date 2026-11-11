@@ -331,35 +331,34 @@ app.get('/room', (req, res) => {
   fullScreen: { enable: false },
   particles: {
     number: { value: 0 },
-    color: { value: ["#ffffff", "#d0e8ff"] },
+    color: { value: ["#ffffff", "#cce6ff", "#e6f2ff"] },
     opacity: {
-      value: { min: 0.05, max: 0.2 },
+      value: { min: 0.15, max: 0.4 },
       animation: {
         enable: true,
-        speed: 2,
+        speed: 1.2,
         minimumValue: 0,
         sync: false
       }
     },
     size: {
-      value: { min: 3, max: 8 },
+      value: { min: 6, max: 14 },
       animation: {
         enable: true,
-        speed: 4,
-        minimumValue: 0.5
+        speed: 2,
+        minimumValue: 1
       }
     },
     move: {
       enable: true,
-      speed: 0.6,
+      speed: 0.7,
       direction: "none",
       random: true,
       straight: false,
-      outModes: { default: "destroy" },
-      decay: 0.05
+      outModes: { default: "destroy" }
     },
     life: {
-      duration: { value: 0.8 },
+      duration: { value: 1.4 },
       count: 1
     }
   },
@@ -370,8 +369,8 @@ app.get('/room', (req, res) => {
     },
     modes: {
       trail: {
-        delay: 0.08,
-        quantity: 2,
+        delay: 0.06,
+        quantity: 3,
         pauseOnStop: true
       }
     }
