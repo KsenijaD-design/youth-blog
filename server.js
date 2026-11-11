@@ -328,36 +328,55 @@ app.get('/room', (req, res) => {
 
       // Дымчатый след
       tsParticles.load("tsparticles", {
-        fullScreen: { enable: false },
-        particles: {
-          number: { value: 0 },
-          color: { value: ["#ffffff", "#cce6ff", "#e6f2ff"] },
-          opacity: {
-            value: { min: 0.1, max: 0.35 },
-            animation: { enable: true, speed: 1, minimumValue: 0 }
-          },
-          size: {
-            value: { min: 4, max: 12 },
-            animation: { enable: true, speed: 3, minimumValue: 1 }
-          },
-          move: {
-            enable: true,
-            speed: 0.8,
-            direction: "none",
-            random: true,
-            outModes: "destroy"
-          }
-        },
-        interactivity: {
-          detectsOn: "window",
-          events: {
-            onHover: { enable: true, mode: "trail" }
-          },
-          modes: {
-            trail: { delay: 0.1, quantity: 4, pauseOnStop: true }
-          }
-        }
-      });
+  fullScreen: { enable: false },
+  particles: {
+    number: { value: 0 },
+    color: { value: ["#ffffff", "#d0e8ff"] },
+    opacity: {
+      value: { min: 0.05, max: 0.2 },
+      animation: {
+        enable: true,
+        speed: 2,
+        minimumValue: 0,
+        sync: false
+      }
+    },
+    size: {
+      value: { min: 3, max: 8 },
+      animation: {
+        enable: true,
+        speed: 4,
+        minimumValue: 0.5
+      }
+    },
+    move: {
+      enable: true,
+      speed: 0.6,
+      direction: "none",
+      random: true,
+      straight: false,
+      outModes: { default: "destroy" },
+      decay: 0.05
+    },
+    life: {
+      duration: { value: 0.8 },
+      count: 1
+    }
+  },
+  interactivity: {
+    detectsOn: "window",
+    events: {
+      onHover: { enable: true, mode: "trail" }
+    },
+    modes: {
+      trail: {
+        delay: 0.08,
+        quantity: 2,
+        pauseOnStop: true
+      }
+    }
+  }
+});
     </script>
   </body>
   </html>
