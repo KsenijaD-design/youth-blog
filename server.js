@@ -230,12 +230,12 @@ app.get('/room', (req, res) => {
 
       .ornament {
         position: absolute;
-        width: 42px;
-        height: auto;
-        z-index: 10;
-        pointer-events: none;
-        filter: drop-shadow(1px 2px 2px rgba(0,0,0,0.4));
-        animation: appear 0.35s ease-out;
+  width: 42px;
+  height: auto;
+  z-index: 10;
+  filter: drop-shadow(1px 2px 2px rgba(0,0,0,0.4));
+  animation: appear 0.35s ease-out;
+  cursor: pointer;
       }
 
       @keyframes appear {
@@ -243,6 +243,10 @@ app.get('/room', (req, res) => {
         70% { transform: scale(1.15); opacity: 1; }
         100% { transform: scale(1); opacity: 1; }
       }
+        @keyframes disappear {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0); opacity: 0; }
+}
 
       #palette {
         position: absolute; top: 70px; left: 20px;
@@ -327,34 +331,62 @@ app.get('/room', (req, res) => {
         ornament.style.transform = 'rotate(' + rotation + 'deg)';
         document.getElementById('room').appendChild(ornament);
       };
+      // Удаление игрушки по клику
+document.getElementById('room').addEventListener('click', function(e) {
+  if (e.target.classList.contains('ornament')) {
+    const ornament = e.target;
+    ornament.style.animation = 'disappear 0.3s ease-in forwards';
+    setTimeout(() => ornament.remove(), 300);
+  }
+});
 
       // След за курсором
       tsParticles.load("tsparticles", {
-        fullScreen: { enable: false },
-        particles: {
-          number: { value: 0 },
-          color: { value: ["#ffffff", "#cce6ff", "#e6f2ff"] },
-          opacity: {
-            value: { min: 0.15, max: 0.4 },
-            animation: { enable: true, speed: 1.2, minimumValue: 0 }
-          },
-          size: { value: { min: 6, max: 14 } },
-          move: {
-            enable: true,
-            speed: 0.7,
-            direction: "none",
-            random: true,
-            outModes: "destroy"
-          },
-          life: { duration: { value: 1.4 }, count: 1 }
-        },
-        interactivity: {
-          detectsOn: "window",
-          events: { onHover: { enable: true, mode: "trail" } },
-          modes: { trail: { delay: 0.06, quantity: 3, pauseOnStop: true } }
-        }
-      });
-
+  fullScreen: { enable: false },
+  particles: {
+    number: { value: 0 },
+    color: { value: ["#ffffff", "#d6ebff", "#f0f8ff"] },
+    opacity: {
+      value: { min: 0.2, max: 0.5 },
+      animation: {
+        enable: true,
+        speed: 0.6,
+        minimumValue: 0,
+        sync: false
+      }
+    },
+    size: {
+      value: { min: 7, max: 16 },
+      animation: {
+        enable: true,
+        speed: 1.5,
+        minimumValue: 2
+      }
+    },
+    move: {
+      enable: true,
+      speed: 0.5,
+      direction: "none",
+      random: true,
+      outModes: "destroy"
+    },
+    life: {
+      duration: { value: 2.2 },
+      count: 1
+    }
+  },
+  interactivity: {
+    detectsOn: "window",
+    events: { onHover: { enable: true, mode: "trail" } },
+    modes: {
+      trail: {
+        delay: 0.05,
+        quantity: 3,
+        pauseOnStop: true
+      }
+    }
+  }
+});
       // Снег
       tsParticles.load("snow", {
         fullScreen: { enable: false },
