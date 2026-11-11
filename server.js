@@ -322,7 +322,7 @@ app.get('/room', (req, res) => {
         document.getElementById('room').appendChild(ornament);
       };
 
-      // Тонкий дымчатый след
+      // Неоновая лента за курсором
 const canvas = document.getElementById('trail-canvas');
 const ctx = canvas.getContext('2d');
 
@@ -333,50 +333,54 @@ function resizeCanvas() {
 resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
 
-let particles = [];
-let mouse = { x: 0, y: 0 };
+let points = [];
+const maxPoints = 40;
 
 document.addEventListener('mousemove', (e) => {
-  mouse.x = e.clientX;
-  mouse.y = e.clientY;
-
-  for (let i = 0; i < 2; i++) {
-    particles.push({
-      x: mouse.x + (Math.random() - 0.5) * 10,
-      y: mouse.y + (Math.random() - 0.5) * 10,
-      size: Math.random() * 12 + 6,
-      life: 1,
-      vx: (Math.random() - 0.5) * 0.8,
-      vy: (Math.random() - 0.5) * 0.8 - 0.3
-    });
-  }
+  points.push({ x: e.clientX, y: e.clientY });
+  if (points.length > maxPoints) points.shift();
 });
 
 function animateTrail() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  for (let i = particles.length - 1; i >= 0; i--) {
-    const p = particles[i];
-    p.x += p.vx;
-    p.y += p.vy;
-    p.life -= 0.015;
-    p.size *= 0.985;
-
-    if (p.life <= 0) {
-      particles.splice(i, 1);
-      continue;
-    }
-
-    const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size);
-    gradient.addColorStop(0, 'rgba(255, 230, 180, ' + (p.life * 0.25) + ')');
-    gradient.addColorStop(0.4, 'rgba(255, 200, 120, ' + (p.life * 0.12) + ')');
-    gradient.addColorStop(1, 'rgba(255, 180, 80, 0)');
-
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-    ctx.fillStyle = gradient;
-    ctx.fill();
+  if (points.length < 2) {
+    requestAnimationFrame(animateTrail);
+    return;
   }
+
+  // Основная белая лента
+  ctx.beginPath();
+  ctx.moveTo(points[0].x, points[0].y);
+  for (let i = 1; i < points.length - 1; i++) {
+    const xc = (points[i].x + points[i + 1].x) / 2;
+    const yc = (points[i].y + points[i + 1].y) / 2;
+    ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
+  }
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+  ctx.lineWidth = 3;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.shadowBlur = 15;
+  ctx.shadowColor = 'rgba(180, 220, 255, 0.8)';
+  ctx.stroke();
+
+  // Синее свечение
+  ctx.beginPath();
+  ctx.moveTo(points[0].x, points[0].y);
+  for (let i = 1; i < points.length - 1; i++) {
+    const xc = (points[i].x + points[i + 1].x) / 2;
+    const yc = (points[i].y + points[i + 1].y) / 2;
+    ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
+  }
+  ctx.strokeStyle = 'rgba(100, 180, 255, 0.4)';
+  ctx.lineWidth = 8;
+  ctx.shadowBlur = 25;
+  ctx.shadowColor = 'rgba(80, 160, 255, 0.6)';
+  ctx.stroke();
+
+  // Постепенно убираем старые точки
+  if (points.length > 5) points.shift();
 
   requestAnimationFrame(animateTrail);
 }
