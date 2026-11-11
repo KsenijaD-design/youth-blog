@@ -301,7 +301,7 @@ app.get('/room', (req, res) => {
     const offset = (clickX - centerX) / centerX;
 
     // Поворот: слева отрицательный, справа положительный (к центру)
-    const rotation = offset * 18; // максимум ±18 градусов
+    const rotation = offset * -18; // максимум ±18 градусов
 
     const x = e.clientX - 21;
     const y = e.clientY - 21;
