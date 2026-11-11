@@ -251,6 +251,16 @@ app.get('/room', (req, res) => {
         border-radius: 8px; background: rgba(255,255,255,0.1);
       }
       .toy-btn.active { border-color: #f1c40f; }
+
+      #trail-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 15;
+      }
     </style>
   </head>
   <body>
@@ -278,43 +288,87 @@ app.get('/room', (req, res) => {
       <div id="fireplace"><div id="fire"></div></div>
       <div id="floor"></div>
       <img id="tree-img" src="https://i.ibb.co/bp7cWnn/4692475-01.png" alt="Ёлка">
+      <canvas id="trail-canvas"></canvas>
     </div>
 
     <script>
-  let selectedToy = 'https://i.ibb.co/9Hg5qPB1/1.png';
+      let selectedToy = 'https://i.ibb.co/9Hg5qPB1/1.png';
 
-  document.querySelectorAll('.toy-btn').forEach(btn => {
-    btn.onclick = (e) => {
-      e.stopPropagation();
-      selectedToy = btn.dataset.src;
-      document.querySelectorAll('.toy-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-    };
-  });
+      document.querySelectorAll('.toy-btn').forEach(btn => {
+        btn.onclick = (e) => {
+          e.stopPropagation();
+          selectedToy = btn.dataset.src;
+          document.querySelectorAll('.toy-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        };
+      });
 
-  document.getElementById('tree-img').onclick = function(e) {
-    const rect = this.getBoundingClientRect();
-    const clickX = e.clientX - rect.left;
-    const centerX = rect.width / 2;
+      document.getElementById('tree-img').onclick = function(e) {
+        const rect = this.getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+        const centerX = rect.width / 2;
+        const offset = (clickX - centerX) / centerX;
+        const rotation = offset * -18;
 
-    // Смещение от центра (от -1 до 1)
-    const offset = (clickX - centerX) / centerX;
+        const x = e.clientX - 21;
+        const y = e.clientY - 21;
 
-    // Поворот: слева отрицательный, справа положительный (к центру)
-    const rotation = offset * -18; // максимум ±18 градусов
+        const ornament = document.createElement('img');
+        ornament.className = 'ornament';
+        ornament.src = selectedToy;
+        ornament.style.left = x + 'px';
+        ornament.style.top = y + 'px';
+        ornament.style.transform = 'rotate(' + rotation + 'deg)';
+        document.getElementById('room').appendChild(ornament);
+      };
 
-    const x = e.clientX - 21;
-    const y = e.clientY - 21;
+      // Световой след
+      const canvas = document.getElementById('trail-canvas');
+      const ctx = canvas.getContext('2d');
 
-    const ornament = document.createElement('img');
-    ornament.className = 'ornament';
-    ornament.src = selectedToy;
-    ornament.style.left = x + 'px';
-    ornament.style.top = y + 'px';
-    ornament.style.transform = 'rotate(' + rotation + 'deg)';
-    document.getElementById('room').appendChild(ornament);
-  };
-</script>
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+
+      let particles = [];
+
+      document.addEventListener('mousemove', (e) => {
+        for (let i = 0; i < 3; i++) {
+          particles.push({
+            x: e.clientX,
+            y: e.clientY,
+            size: Math.random() * 8 + 4,
+            life: 1,
+            vx: (Math.random() - 0.5) * 1.5,
+            vy: (Math.random() - 0.5) * 1.5
+          });
+        }
+      });
+
+      function animateTrail() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let i = particles.length - 1; i >= 0; i--) {
+          const p = particles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+          p.life -= 0.02;
+          p.size *= 0.98;
+          if (p.life <= 0) {
+            particles.splice(i, 1);
+            continue;
+          }
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(255, 220, 150, ' + (p.life * 0.6) + ')';
+          ctx.fill();
+        }
+        requestAnimationFrame(animateTrail);
+      }
+      animateTrail();
+    </script>
   </body>
   </html>
   `);
