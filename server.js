@@ -194,35 +194,31 @@ app.get('/room', (req, res) => {
       }
 
       #floor {
-        position: absolute; bottom: 0; left: 0; right: 0; height: 100px;
+        position: absolute; bottom: 0; left: 0; right: 0; height: 80px;
         background: linear-gradient(#5d4037, #3e2723);
       }
 
       #window {
-        position: absolute; top: 70px; right: 60px; width: 160px; height: 200px;
-        background: #87ceeb; border: 10px solid #5d4037; border-radius: 6px;
+        position: absolute; top: 60px; left: 40px; width: 140px; height: 180px;
+        background: #87ceeb; border: 8px solid #5d4037; border-radius: 6px;
       }
 
       #fireplace {
-        position: absolute; bottom: 100px; left: 50px; width: 140px; height: 120px;
+        position: absolute; bottom: 80px; left: 30px; width: 120px; height: 100px;
         background: #4a3728; border-radius: 6px 6px 0 0;
       }
       #fire {
-        position: absolute; bottom: 8px; left: 25px; width: 90px; height: 50px;
+        position: absolute; bottom: 6px; left: 20px; width: 80px; height: 40px;
         background: radial-gradient(ellipse, #ff6b00, #ff3300 40%, transparent 70%);
         border-radius: 50%; animation: flicker 0.4s infinite alternate;
       }
-      @keyframes flicker {
-        from { opacity: 0.85; }
-        to { opacity: 1; }
-      }
+      @keyframes flicker { from { opacity: 0.8; } to { opacity: 1; } }
 
       #tree-img {
         position: absolute;
-        bottom: 80px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 420px;
+        bottom: 20px;
+        right: 30px;
+        width: 900px;
         height: auto;
         pointer-events: none;
         z-index: 5;
@@ -230,25 +226,24 @@ app.get('/room', (req, res) => {
 
       .ornament {
         position: absolute;
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        border: 2px solid rgba(255,255,255,0.8);
-        box-shadow: inset -3px -3px 5px rgba(0,0,0,0.3);
+        width: 70px;
+        height: auto;
         z-index: 10;
         pointer-events: none;
+        filter: drop-shadow(2px 3px 3px rgba(0,0,0,0.4));
       }
 
       #palette {
         position: absolute; top: 70px; left: 20px;
-        background: rgba(0,0,0,0.8); padding: 15px; border-radius: 12px;
-        color: white; z-index: 50;
+        background: rgba(0,0,0,0.85); padding: 12px; border-radius: 12px;
+        color: white; z-index: 50; max-width: 280px;
       }
-      .color-btn {
-        width: 36px; height: 36px; border-radius: 50%; display: inline-block;
-        margin: 4px; cursor: pointer; border: 2px solid #fff;
+      .toy-btn {
+        width: 50px; height: 50px; object-fit: contain;
+        margin: 4px; cursor: pointer; border: 2px solid transparent;
+        border-radius: 8px; background: rgba(255,255,255,0.1);
       }
-      .color-btn.active { outline: 3px solid #f1c40f; }
+      .toy-btn.active { border-color: #f1c40f; }
     </style>
   </head>
   <body>
@@ -260,48 +255,46 @@ app.get('/room', (req, res) => {
     </nav>
 
     <div id="palette">
-      <div style="margin-bottom:8px;">Выбери цвет и кликни рядом с ёлкой</div>
-      <div class="color-btn active" style="background:#e74c3c" data-color="#e74c3c"></div>
-      <div class="color-btn" style="background:#f1c40f" data-color="#f1c40f"></div>
-      <div class="color-btn" style="background:#3498db" data-color="#3498db"></div>
-      <div class="color-btn" style="background:#9b59b6" data-color="#9b59b6"></div>
-      <div class="color-btn" style="background:#ecf0f1" data-color="#ecf0f1"></div>
-      <div class="color-btn" style="background:#e91e63" data-color="#e91e63"></div>
+      <div style="margin-bottom:8px; font-size:14px;">Выбери игрушку и кликни на ёлку</div>
+      <img class="toy-btn active" src="https://i.ibb.co/9Hg5qPB1/1.png" data-src="https://i.ibb.co/9Hg5qPB1/1.png">
+      <img class="toy-btn" src="https://i.ibb.co/JjMjR71z/2.png" data-src="https://i.ibb.co/JjMjR71z/2.png">
+      <img class="toy-btn" src="https://i.ibb.co/ymgHjT2R/3.png" data-src="https://i.ibb.co/ymgHjT2R/3.png">
+      <img class="toy-btn" src="https://i.ibb.co/wZ69Vjpg/4.png" data-src="https://i.ibb.co/wZ69Vjpg/4.png">
+      <img class="toy-btn" src="https://i.ibb.co/GfcV8pSk/5.png" data-src="https://i.ibb.co/GfcV8pSk/5.png">
+      <img class="toy-btn" src="https://i.ibb.co/NgTKcnjD/6.png" data-src="https://i.ibb.co/NgTKcnjD/6.png">
+      <img class="toy-btn" src="https://i.ibb.co/G3Wxhr5n/7.png" data-src="https://i.ibb.co/G3Wxhr5n/7.png">
+      <img class="toy-btn" src="https://i.ibb.co/mCgNSQHR/8.png" data-src="https://i.ibb.co/mCgNSQHR/8.png">
     </div>
 
     <div id="room">
       <div id="window"></div>
       <div id="fireplace"><div id="fire"></div></div>
       <div id="floor"></div>
-
-      <!-- Твоя ёлка -->
       <img id="tree-img" src="https://i.ibb.co/bp7cWnn/4692475-01.png" alt="Ёлка">
     </div>
 
     <script>
-      let selectedColor = '#e74c3c';
+      let selectedToy = 'https://i.ibb.co/9Hg5qPB1/1.png';
 
-      document.querySelectorAll('.color-btn').forEach(btn => {
+      document.querySelectorAll('.toy-btn').forEach(btn => {
         btn.onclick = () => {
-          selectedColor = btn.dataset.color;
-          document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+          selectedToy = btn.dataset.src;
+          document.querySelectorAll('.toy-btn').forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
         };
       });
 
       document.getElementById('room').onclick = function(e) {
-        // Не ставим шарики на меню и палитру
         if (e.target.closest('nav') || e.target.closest('#palette')) return;
 
-        const x = e.clientX - 16;
-        const y = e.clientY - 16;
+        const x = e.clientX - 35;
+        const y = e.clientY - 35;
 
-        const ornament = document.createElement('div');
+        const ornament = document.createElement('img');
         ornament.className = 'ornament';
-        ornament.style.background = selectedColor;
+        ornament.src = selectedToy;
         ornament.style.left = x + 'px';
         ornament.style.top = y + 'px';
-        ornament.style.position = 'absolute';
         document.getElementById('room').appendChild(ornament);
       };
     </script>
