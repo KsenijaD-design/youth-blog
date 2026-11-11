@@ -196,15 +196,15 @@ app.get('/room', (req, res) => {
 
       #floor {
         position: absolute; bottom: 0; left: 0; right: 0; height: 90px;
-        background: linear-gradient(#5d4037, #3e2723);
+        background: linear-gradient(#5d4037, #50190f);
         z-index: 2;
       }
 
       /* Кресло — чуть меньше */
       #chair {
         position: absolute;
-        bottom: 75px;
-        left: 15px;
+        bottom: 45px;
+        left: 100px;
         width: 170px;
         height: auto;
         z-index: 4;
