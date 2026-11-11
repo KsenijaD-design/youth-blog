@@ -339,54 +339,6 @@ document.getElementById('room').addEventListener('click', function(e) {
     setTimeout(() => ornament.remove(), 300);
   }
 });
-
-      // След за курсором
-      tsParticles.load("tsparticles", {
-  fullScreen: { enable: false },
-  particles: {
-    number: { value: 0 },
-    color: { value: ["#ffffff", "#d6ebff", "#f0f8ff"] },
-    opacity: {
-      value: { min: 0.2, max: 0.5 },
-      animation: {
-        enable: true,
-        speed: 0.6,
-        minimumValue: 0,
-        sync: false
-      }
-    },
-    size: {
-      value: { min: 7, max: 16 },
-      animation: {
-        enable: true,
-        speed: 1.5,
-        minimumValue: 2
-      }
-    },
-    move: {
-      enable: true,
-      speed: 0.5,
-      direction: "none",
-      random: true,
-      outModes: "destroy"
-    },
-    life: {
-      duration: { value: 2.2 },
-      count: 1
-    }
-  },
-  interactivity: {
-    detectsOn: "window",
-    events: { onHover: { enable: true, mode: "trail" } },
-    modes: {
-      trail: {
-        delay: 0.05,
-        quantity: 3,
-        pauseOnStop: true
-      }
-    }
-  }
-});
       // Снег
       tsParticles.load("snow", {
         fullScreen: { enable: false },
