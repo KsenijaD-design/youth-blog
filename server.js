@@ -281,31 +281,40 @@ app.get('/room', (req, res) => {
     </div>
 
     <script>
-      let selectedToy = 'https://i.ibb.co/9Hg5qPB1/1.png';
+  let selectedToy = 'https://i.ibb.co/9Hg5qPB1/1.png';
 
-      document.querySelectorAll('.toy-btn').forEach(btn => {
-        btn.onclick = (e) => {
-          e.stopPropagation();
-          selectedToy = btn.dataset.src;
-          document.querySelectorAll('.toy-btn').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-        };
-      });
+  document.querySelectorAll('.toy-btn').forEach(btn => {
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      selectedToy = btn.dataset.src;
+      document.querySelectorAll('.toy-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    };
+  });
 
-      // Клик только по ёлке
-      document.getElementById('tree-img').onclick = function(e) {
-        const rect = this.getBoundingClientRect();
-        const x = e.clientX - 21;
-        const y = e.clientY - 21;
+  document.getElementById('tree-img').onclick = function(e) {
+    const rect = this.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const centerX = rect.width / 2;
 
-        const ornament = document.createElement('img');
-        ornament.className = 'ornament';
-        ornament.src = selectedToy;
-        ornament.style.left = x + 'px';
-        ornament.style.top = y + 'px';
-        document.getElementById('room').appendChild(ornament);
-      };
-    </script>
+    // Смещение от центра (от -1 до 1)
+    const offset = (clickX - centerX) / centerX;
+
+    // Поворот: слева отрицательный, справа положительный (к центру)
+    const rotation = offset * 18; // максимум ±18 градусов
+
+    const x = e.clientX - 21;
+    const y = e.clientY - 21;
+
+    const ornament = document.createElement('img');
+    ornament.className = 'ornament';
+    ornament.src = selectedToy;
+    ornament.style.left = x + 'px';
+    ornament.style.top = y + 'px';
+    ornament.style.transform = 'rotate(' + rotation + 'deg)';
+    document.getElementById('room').appendChild(ornament);
+  };
+</script>
   </body>
   </html>
   `);
