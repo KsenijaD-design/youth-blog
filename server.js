@@ -265,6 +265,15 @@ app.get('/room', (req, res) => {
         z-index: 8;
         pointer-events: none;
       }
+        #snow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 20;
+  pointer-events: none;
+}
     </style>
   </head>
   <body>
@@ -293,6 +302,7 @@ app.get('/room', (req, res) => {
       <div id="floor"></div>
       <img id="tree-img" src="https://i.ibb.co/bp7cWnn/4692475-01.png" alt="Ёлка">
       <div id="tsparticles"></div>
+      <div id="snow"></div>
     </div>
 
     <script>
@@ -375,6 +385,40 @@ app.get('/room', (req, res) => {
       }
     }
   }
+});
+// Снег
+tsParticles.load("snow", {
+  fullScreen: { enable: false },
+  particles: {
+    number: {
+      value: 80,
+      density: { enable: true, area: 800 }
+    },
+    color: { value: "#ffffff" },
+    opacity: {
+      value: { min: 0.3, max: 0.7 },
+      animation: {
+        enable: true,
+        speed: 0.5,
+        minimumValue: 0.1
+      }
+    },
+    size: {
+      value: { min: 1, max: 3.5 }
+    },
+    move: {
+      enable: true,
+      speed: { min: 0.5, max: 1.5 },
+      direction: "bottom",
+      straight: false,
+      outModes: { default: "out" }
+    },
+    life: {
+      duration: { value: 8 },
+      count: 1
+    }
+  },
+  interactivity: { detectsOn: "canvas", events: { resize: true } }
 });
     </script>
   </body>
