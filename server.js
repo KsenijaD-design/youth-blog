@@ -193,76 +193,59 @@ app.get('/room', (req, res) => {
         background: linear-gradient(180deg, #1a1a3e 0%, #2d1b4e 40%, #3d2a1a 100%);
       }
 
-      /* Пол */
       #floor {
-        position: absolute; bottom: 0; left: 0; right: 0; height: 120px;
+        position: absolute; bottom: 0; left: 0; right: 0; height: 100px;
         background: linear-gradient(#5d4037, #3e2723);
       }
 
-      /* Окно */
       #window {
-        position: absolute; top: 80px; right: 80px; width: 180px; height: 220px;
-        background: #87ceeb; border: 12px solid #5d4037; border-radius: 8px;
-        box-shadow: inset 0 0 30px rgba(255,255,255,0.3);
-      }
-      #window::before {
-        content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 8px;
-        background: #5d4037; transform: translateX(-50%);
-      }
-      #window::after {
-        content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 8px;
-        background: #5d4037;
+        position: absolute; top: 70px; right: 60px; width: 160px; height: 200px;
+        background: #87ceeb; border: 10px solid #5d4037; border-radius: 6px;
       }
 
-      /* Камин */
       #fireplace {
-        position: absolute; bottom: 120px; left: 60px; width: 160px; height: 140px;
-        background: #4a3728; border-radius: 8px 8px 0 0;
+        position: absolute; bottom: 100px; left: 50px; width: 140px; height: 120px;
+        background: #4a3728; border-radius: 6px 6px 0 0;
       }
       #fire {
-        position: absolute; bottom: 10px; left: 30px; width: 100px; height: 60px;
+        position: absolute; bottom: 8px; left: 25px; width: 90px; height: 50px;
         background: radial-gradient(ellipse, #ff6b00, #ff3300 40%, transparent 70%);
-        border-radius: 50%; animation: flicker 0.3s infinite alternate;
+        border-radius: 50%; animation: flicker 0.4s infinite alternate;
       }
       @keyframes flicker {
-        from { opacity: 0.8; transform: scale(1); }
-        to { opacity: 1; transform: scale(1.05); }
+        from { opacity: 0.85; }
+        to { opacity: 1; }
       }
 
-      /* Ёлка */
-      #tree-container {
-        position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%);
-        width: 320px; height: 480px;
-      }
-      .tree-layer {
-        position: absolute; left: 50%; transform: translateX(-50%);
-        background: #1a7a1a;
-        clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-      }
-      .layer1 { bottom: 0; width: 300px; height: 180px; background: #0d5c0d; }
-      .layer2 { bottom: 140px; width: 240px; height: 160px; background: #117a11; }
-      .layer3 { bottom: 260px; width: 180px; height: 140px; background: #159315; }
-      .layer4 { bottom: 360px; width: 100px; height: 100px; background: #1aad1a; }
-
-      #star {
-        position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
-        font-size: 40px; color: #f1c40f; text-shadow: 0 0 10px #f1c40f;
+      #tree-img {
+        position: absolute;
+        bottom: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 420px;
+        height: auto;
+        pointer-events: none;
+        z-index: 5;
       }
 
       .ornament {
-        position: absolute; width: 26px; height: 26px; border-radius: 50%;
-        border: 2px solid rgba(255,255,255,0.7);
-        box-shadow: inset -4px -4px 6px rgba(0,0,0,0.3), 2px 2px 4px rgba(255,255,255,0.4);
-        cursor: pointer;
+        position: absolute;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 2px solid rgba(255,255,255,0.8);
+        box-shadow: inset -3px -3px 5px rgba(0,0,0,0.3);
+        z-index: 10;
+        pointer-events: none;
       }
 
       #palette {
         position: absolute; top: 70px; left: 20px;
-        background: rgba(0,0,0,0.75); padding: 15px; border-radius: 12px;
+        background: rgba(0,0,0,0.8); padding: 15px; border-radius: 12px;
         color: white; z-index: 50;
       }
       .color-btn {
-        width: 34px; height: 34px; border-radius: 50%; display: inline-block;
+        width: 36px; height: 36px; border-radius: 50%; display: inline-block;
         margin: 4px; cursor: pointer; border: 2px solid #fff;
       }
       .color-btn.active { outline: 3px solid #f1c40f; }
@@ -277,7 +260,7 @@ app.get('/room', (req, res) => {
     </nav>
 
     <div id="palette">
-      <div style="margin-bottom:8px; font-size:14px;">Кликни цвет, потом на ёлку</div>
+      <div style="margin-bottom:8px;">Выбери цвет и кликни рядом с ёлкой</div>
       <div class="color-btn active" style="background:#e74c3c" data-color="#e74c3c"></div>
       <div class="color-btn" style="background:#f1c40f" data-color="#f1c40f"></div>
       <div class="color-btn" style="background:#3498db" data-color="#3498db"></div>
@@ -288,18 +271,11 @@ app.get('/room', (req, res) => {
 
     <div id="room">
       <div id="window"></div>
-      <div id="fireplace">
-        <div id="fire"></div>
-      </div>
+      <div id="fireplace"><div id="fire"></div></div>
       <div id="floor"></div>
 
-      <div id="tree-container">
-        <div class="tree-layer layer1"></div>
-        <div class="tree-layer layer2"></div>
-        <div class="tree-layer layer3"></div>
-        <div class="tree-layer layer4"></div>
-        <div id="star">★</div>
-      </div>
+      <!-- Твоя ёлка -->
+      <img id="tree-img" src="https://i.ibb.co/bp7cWnn/4692475-01.png" alt="Ёлка">
     </div>
 
     <script>
@@ -313,22 +289,20 @@ app.get('/room', (req, res) => {
         };
       });
 
-      document.getElementById('tree-container').onclick = function(e) {
-        if (e.target.classList.contains('ornament')) return;
+      document.getElementById('room').onclick = function(e) {
+        // Не ставим шарики на меню и палитру
+        if (e.target.closest('nav') || e.target.closest('#palette')) return;
 
-        const rect = this.getBoundingClientRect();
-        const x = e.clientX - rect.left - 13;
-        const y = e.clientY - rect.top - 13;
-
-        // Не ставим слишком высоко или по краям
-        if (y < 30 || y > 450 || x < 20 || x > 280) return;
+        const x = e.clientX - 16;
+        const y = e.clientY - 16;
 
         const ornament = document.createElement('div');
         ornament.className = 'ornament';
         ornament.style.background = selectedColor;
         ornament.style.left = x + 'px';
         ornament.style.top = y + 'px';
-        this.appendChild(ornament);
+        ornament.style.position = 'absolute';
+        document.getElementById('room').appendChild(ornament);
       };
     </script>
   </body>
