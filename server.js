@@ -170,6 +170,102 @@ app.post('/delete/:id', async (req, res) => {
   await pool.query('DELETE FROM posts WHERE id = $1', [req.params.id]);
   res.redirect('/blog');
 });
+// Новогодняя комната
+app.get('/room', (req, res) => {
+  res.send(`
+  <!DOCTYPE html>
+  <html lang="ru">
+  <head>
+    <meta charset="UTF-8">
+    <title>Новогодняя комната</title>
+    <style>
+      body { margin: 0; background: #1a1a2e; font-family: Arial; overflow: hidden; }
+      #room {
+        width: 100vw;
+        height: 100vh;
+        background: linear-gradient(#0f3460, #16213e);
+        position: relative;
+      }
+      #tree {
+        position: absolute;
+        bottom: 50px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 300px;
+        height: 450px;
+        background: #0d5c0d;
+        clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        cursor: pointer;
+      }
+      .ornament {
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        cursor: move;
+      }
+      #palette {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        background: rgba(0,0,0,0.6);
+        padding: 15px;
+        border-radius: 10px;
+        color: white;
+      }
+      .color-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: inline-block;
+        margin: 5px;
+        cursor: pointer;
+        border: 2px solid white;
+      }
+      nav { position: absolute; top: 10px; right: 20px; }
+      nav a { color: white; margin-left: 15px; text-decoration: none; }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <a href="/">← На главную</a>
+    </nav>
+    <div id="palette">
+      <div>Выбери цвет и кликни на ёлку:</div>
+      <div class="color-btn" style="background:#e74c3c" data-color="#e74c3c"></div>
+      <div class="color-btn" style="background:#f1c40f" data-color="#f1c40f"></div>
+      <div class="color-btn" style="background:#3498db" data-color="#3498db"></div>
+      <div class="color-btn" style="background:#9b59b6" data-color="#9b59b6"></div>
+      <div class="color-btn" style="background:#2ecc71" data-color="#2ecc71"></div>
+    </div>
+    <div id="room">
+      <div id="tree"></div>
+    </div>
+
+    <script>
+      let selectedColor = '#e74c3c';
+
+      document.querySelectorAll('.color-btn').forEach(btn => {
+        btn.onclick = () => selectedColor = btn.dataset.color;
+      });
+
+      document.getElementById('tree').onclick = function(e) {
+        const rect = this.getBoundingClientRect();
+        const x = e.clientX - rect.left - 15;
+        const y = e.clientY - rect.top - 15;
+
+        const ornament = document.createElement('div');
+        ornament.className = 'ornament';
+        ornament.style.background = selectedColor;
+        ornament.style.left = x + 'px';
+        ornament.style.top = y + 'px';
+        this.appendChild(ornament);
+      };
+    </script>
+  </body>
+  </html>
+  `);
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
