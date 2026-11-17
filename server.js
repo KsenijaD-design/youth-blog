@@ -170,7 +170,6 @@ app.post('/delete/:id', async (req, res) => {
   await pool.query('DELETE FROM posts WHERE id = $1', [req.params.id]);
   res.redirect('/blog');
 });
-// Новогодняя комната
 app.get('/room', (req, res) => {
   res.send(`
   <!DOCTYPE html>
@@ -200,7 +199,6 @@ app.get('/room', (req, res) => {
         z-index: 2;
       }
 
-      /* Кресло — чуть меньше */
       #chair {
         position: absolute;
         bottom: 45px;
@@ -211,7 +209,6 @@ app.get('/room', (req, res) => {
         pointer-events: none;
       }
 
-      /* Камин — большой, примерно половина ёлки */
       #fireplace-img {
         position: absolute;
         bottom: 50px;
@@ -222,7 +219,6 @@ app.get('/room', (req, res) => {
         cursor: pointer;
       }
 
-      /* Огонь поверх камина */
       #fire {
         position: absolute;
         bottom: 110px;
@@ -297,12 +293,13 @@ app.get('/room', (req, res) => {
         border: none; border-radius: 6px; background: #34495e; color: white;
       }
       .mode-btn.active { background: #f1c40f; color: #111; }
-      .toy-btn {
+      .toy-btn, .gift-btn {
         width: 40px; height: 40px; object-fit: contain; margin: 3px;
         cursor: pointer; border: 2px solid transparent; border-radius: 6px;
         background: rgba(255,255,255,0.08);
       }
-      .toy-btn.active { border-color: #f1c40f; }
+      .gift-btn { width: 50px; height: 50px; }
+      .toy-btn.active, .gift-btn.active { border-color: #f1c40f; }
 
       #tsparticles, #snow {
         position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -336,6 +333,7 @@ app.get('/room', (req, res) => {
       <button class="mode-btn active" data-mode="ornament">Игрушки</button>
       <button class="mode-btn" data-mode="gift">Подарки</button>
       <button class="mode-btn" data-mode="stocking">Носки</button>
+
       <div id="toy-list" style="margin-top:10px;">
         <img class="toy-btn active" src="https://i.ibb.co/9Hg5qPB1/1.png" data-src="https://i.ibb.co/9Hg5qPB1/1.png">
         <img class="toy-btn" src="https://i.ibb.co/JjMjR71z/2.png" data-src="https://i.ibb.co/JjMjR71z/2.png">
@@ -345,6 +343,13 @@ app.get('/room', (req, res) => {
         <img class="toy-btn" src="https://i.ibb.co/NgTKcnjD/6.png" data-src="https://i.ibb.co/NgTKcnjD/6.png">
         <img class="toy-btn" src="https://i.ibb.co/G3Wxhr5n/7.png" data-src="https://i.ibb.co/G3Wxhr5n/7.png">
         <img class="toy-btn" src="https://i.ibb.co/mCgNSQHR/8.png" data-src="https://i.ibb.co/mCgNSQHR/8.png">
+      </div>
+
+      <div id="gift-list" style="margin-top:10px; display:none;">
+        <img class="gift-btn active" src="https://i.ibb.co/XfGLxm22/4.png" data-src="https://i.ibb.co/XfGLxm22/4.png">
+        <img class="gift-btn" src="https://i.ibb.co/DfW5XB5N/6.png" data-src="https://i.ibb.co/DfW5XB5N/6.png">
+        <img class="gift-btn" src="https://i.ibb.co/cXDrdxT7/7.png" data-src="https://i.ibb.co/cXDrdxT7/7.png">
+        <img class="gift-btn" src="https://i.ibb.co/WW6Gp37d/8.png" data-src="https://i.ibb.co/WW6Gp37d/8.png">
       </div>
     </div>
 
@@ -359,12 +364,6 @@ app.get('/room', (req, res) => {
     </div>
 
     <script>
-      const gifts = [
-        "https://i.ibb.co/XfGLxm22/4.png",
-        "https://i.ibb.co/DfW5XB5N/6.png",
-        "https://i.ibb.co/WW6Gp37d/8.png",
-        "https://i.ibb.co/cXDrdxT7/7.png"
-      ];
       const stockings = [
         "https://i.ibb.co/N6p7qR1z/9.png",
         "https://i.ibb.co/JjvY6TH7/10.png"
@@ -372,6 +371,7 @@ app.get('/room', (req, res) => {
 
       let mode = "ornament";
       let selectedToy = "https://i.ibb.co/9Hg5qPB1/1.png";
+      let selectedGift = "https://i.ibb.co/XfGLxm22/4.png";
 
       document.querySelectorAll(".mode-btn").forEach(btn => {
         btn.onclick = () => {
@@ -379,6 +379,7 @@ app.get('/room', (req, res) => {
           document.querySelectorAll(".mode-btn").forEach(b => b.classList.remove("active"));
           btn.classList.add("active");
           document.getElementById("toy-list").style.display = (mode === "ornament") ? "block" : "none";
+          document.getElementById("gift-list").style.display = (mode === "gift") ? "block" : "none";
         };
       });
 
@@ -391,7 +392,15 @@ app.get('/room', (req, res) => {
         };
       });
 
-      // Огоньки
+      document.querySelectorAll(".gift-btn").forEach(btn => {
+        btn.onclick = (e) => {
+          e.stopPropagation();
+          selectedGift = btn.dataset.src;
+          document.querySelectorAll(".gift-btn").forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+        };
+      });
+
       function spawnEmber() {
         const ember = document.createElement("div");
         ember.className = "ember";
@@ -406,7 +415,6 @@ app.get('/room', (req, res) => {
       }
       setInterval(spawnEmber, 160);
 
-      // Ёлка — игрушки
       document.getElementById("tree-img").onclick = function(e) {
         if (mode !== "ornament") return;
         const rect = this.getBoundingClientRect();
@@ -422,20 +430,18 @@ app.get('/room', (req, res) => {
         document.getElementById("room").appendChild(el);
       };
 
-      // Подарки — клик по комнате
       document.getElementById("room").addEventListener("click", function(e) {
         if (mode !== "gift") return;
         if (e.target.closest("#palette") || e.target.closest("nav") || e.target.id === "tree-img" || e.target.id === "fireplace-img") return;
 
         const el = document.createElement("img");
         el.className = "gift";
-        el.src = gifts[Math.floor(Math.random() * gifts.length)];
+        el.src = selectedGift;
         el.style.left = (e.clientX - 37) + "px";
         el.style.top = (e.clientY - 37) + "px";
         document.getElementById("room").appendChild(el);
       });
 
-      // Носки — клик по камину
       document.getElementById("fireplace-img").onclick = function(e) {
         if (mode !== "stocking") return;
         e.stopPropagation();
@@ -447,7 +453,6 @@ app.get('/room', (req, res) => {
         document.getElementById("room").appendChild(el);
       };
 
-      // Удаление
       document.getElementById("room").addEventListener("click", function(e) {
         if (e.target.classList.contains("ornament") || e.target.classList.contains("gift") || e.target.classList.contains("stocking")) {
           e.stopPropagation();
@@ -456,7 +461,6 @@ app.get('/room', (req, res) => {
         }
       });
 
-      // Музыка
       const music = document.getElementById("bg-music");
       const musicBtn = document.getElementById("music-btn");
       let playing = false;
@@ -466,32 +470,13 @@ app.get('/room', (req, res) => {
         playing = !playing;
       };
 
-      // След
-      tsParticles.load("tsparticles", {
-        fullScreen: { enable: false },
-        particles: {
-          number: { value: 0 },
-          color: { value: ["#ffffff", "#d6ebff"] },
-          opacity: { value: { min: 0.15, max: 0.45 }, animation: { enable: true, speed: 0.5, minimumValue: 0 } },
-          size: { value: { min: 6, max: 15 } },
-          move: { enable: true, speed: 0.4, random: true, outModes: "destroy" },
-          life: { duration: { value: 2.4 }, count: 1 }
-        },
-        interactivity: {
-          detectsOn: "window",
-          events: { onHover: { enable: true, mode: "trail" } },
-          modes: { trail: { delay: 0.05, quantity: 3 } }
-        }
-      });
-
-      // Снег
       tsParticles.load("snow", {
         fullScreen: { enable: false },
         particles: {
           number: { value: 45 },
           color: { value: "#fff" },
           opacity: { value: { min: 0.15, max: 0.5 } },
-          size: { value: { min: 1, max: 2.8 } },
+          size: { value: { min: 1.3, max: 2.8 } },
           move: { enable: true, speed: { min: 0.3, max: 1 }, direction: "bottom", outModes: "out" }
         }
       });
