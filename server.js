@@ -434,11 +434,20 @@ app.get('/room', (req, res) => {
         if (mode !== "gift") return;
         if (e.target.closest("#palette") || e.target.closest("nav") || e.target.id === "tree-img" || e.target.id === "fireplace-img") return;
 
+        // Ограничиваем подарки только нижней частью экрана (пол + немного выше)
+        const floorTop = window.innerHeight - 180; // зона, где можно ставить подарки
+        let giftY = e.clientY - 37;
+
+        // Если кликнули слишком высоко — опускаем подарок вниз
+        if (giftY < floorTop) {
+        giftY = floorTop + Math.random() * 40; // небольшой разброс по высоте
+        }
+
         const el = document.createElement("img");
         el.className = "gift";
         el.src = selectedGift;
         el.style.left = (e.clientX - 37) + "px";
-        el.style.top = (e.clientY - 37) + "px";
+        el.style.top = giftY + "px";
         document.getElementById("room").appendChild(el);
       });
 
